@@ -30,10 +30,11 @@
 
     public function connect($host = DH,$dbuser = DU,$password = DP,$dbname = DB,$dbcode = HE)
     {
-    	$dsn="mysql:host={$host};dbname={$dbname};";
-    	$this->linkid = new \PDO($dsn,$dbuser,$password);
-    	if(HE == 'utf-8')
-    	$this->linkid->query("set names utf8");
+    	$charset = (strtolower(str_replace("-", "", $dbcode)) == "utf8") ? "utf8mb4" : "gbk";
+    	$dsn="mysql:host={$host};dbname={$dbname};charset={$charset};";
+    	$this->linkid = new \PDO($dsn,$dbuser,$password,array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION, \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC));
+    	if($charset == 'utf8mb4')
+    	$this->linkid->query("set names utf8mb4");
     	else
     	$this->linkid->query("set names gbk");
     }

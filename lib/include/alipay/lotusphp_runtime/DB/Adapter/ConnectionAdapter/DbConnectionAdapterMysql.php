@@ -3,19 +3,19 @@ class LtDbConnectionAdapterMysql implements LtDbConnectionAdapter
 {
 	public function connect($connConf)
 	{
-		return mysql_connect($connConf["host"] . ":" . $connConf["port"], $connConf["username"], $connConf["password"]);
+		return mysqli_connect($connConf["host"], $connConf["username"], $connConf["password"], isset($connConf["dbname"]) ? $connConf["dbname"] : null, $connConf["port"]);
 	}
 
 	public function exec($sql, $connResource)
 	{
-		return mysql_query($sql, $connResource) ? mysql_affected_rows($connResource) : false;
+		return mysqli_query($connResource, $sql) ? mysqli_affected_rows($connResource) : false;
 	}
 
 	public function query($sql, $connResource)
 	{
-		$result = mysql_query($sql, $connResource);
+		$result = mysqli_query($connResource, $sql);
 		$rows = array();
-		while($row = mysql_fetch_assoc($result))
+		while($result && $row = mysqli_fetch_assoc($result))
 		{
 			$rows[] = $row;
 		}
@@ -24,11 +24,11 @@ class LtDbConnectionAdapterMysql implements LtDbConnectionAdapter
 
 	public function lastInsertId($connResource)
 	{
-		return mysql_insert_id($connResource);
+		return mysqli_insert_id($connResource);
 	}
 
 	public function escape($sql, $connResource)
 	{
-		return mysql_real_escape_string($sql, $connResource);
+		return mysqli_real_escape_string($connResource, $sql);
 	}
 }

@@ -18,7 +18,7 @@ class db2
 	//获取MYSQL版本信息
 	public function getVersion()
 	{
-		return mysql_get_server_info($this->linkid);
+		return mysqli_get_server_info($this->linkid);
 	}
 
 	//连接MYSQL
@@ -27,27 +27,27 @@ class db2
             $dbcode = str_replace("-","",$dbcode);
             if(!$this->linkid)
             {
-            	$this->linkid = mysql_connect($host, $dbuser, $password) or die('Mysql数据库连接失败，请检查数据库用户名和密码是否正确！');
+            	$this->linkid = mysqli_connect($host, $dbuser, $password) or die('MariaDB/MySQL数据库连接失败，请检查数据库用户名和密码是否正确！');
             }
             $version = $this->getVersion();
 
             if($version >= '4.0.1')
             {
-            	mysql_query("SET character_set_connection='{$dbcode}', character_set_results='{$dbcode}', character_set_client=binary", $this->linkid);
+            	mysqli_query($this->linkid, "SET character_set_connection='{$dbcode}', character_set_results='{$dbcode}', character_set_client=binary");
 				if($version >= '5.0.1')
 				{
-					mysql_query("SET sql_mode=''", $this->linkid);
+					mysqli_query($this->linkid, "SET sql_mode=''");
 				}
             }
-			else die('Mysql版本过低，请更换5.0以上版本！');
-			mysql_select_db($dbname, $this->linkid);
+			else die('MariaDB/MySQL版本过低，请更换5.0以上版本！');
+			mysqli_select_db($this->linkid, $dbname);
     }
 
     //执行SQL非查询语句
     public function exec($sql)
     {
     	$this->query($sql);
-    	return mysql_affected_rows($this->linkid);
+    	return mysqli_affected_rows($this->linkid);
     }
 
     //执行select
@@ -56,10 +56,10 @@ class db2
     	if(!$sql)return false;
     	if(!$this->linkid)$this->connect();
 		$this->q++;
-    	$this->queryid = mysql_query($sql);
-		if(mysql_errno($this->linkid) && $this->debug)
+    	$this->queryid = mysqli_query($this->linkid, $sql);
+		if(mysqli_errno($this->linkid) && $this->debug)
 		{
-			exit('ERRO:'.$sql.':'.mysql_error());
+			exit('ERRO:'.$sql.':'.mysqli_error($this->linkid));
 			return false;
 		}
     }
@@ -67,11 +67,11 @@ class db2
     public function _fetch($sql = false,$type = 1,$position = 0)
     {
     	if($sql)$this->query($sql);
-    	if(!mysql_num_rows($this->queryid))return false;
-    	if($position)mysql_data_seek($this->queryid, $position);
-    	if($type == 1)return mysql_fetch_assoc($this->queryid);
-    	else if($type == 2) return mysql_fetch_object($this->queryid);
-    	else return mysql_fetch_array($this->queryid);
+    	if(!$this->queryid || !mysqli_num_rows($this->queryid))return false;
+    	if($position)mysqli_data_seek($this->queryid, $position);
+    	if($type == 1)return mysqli_fetch_assoc($this->queryid);
+    	else if($type == 2) return mysqli_fetch_object($this->queryid);
+    	else return mysqli_fetch_array($this->queryid);
     }
 
     //获取单条记录
@@ -132,13 +132,13 @@ class db2
     //返回受影响的记录数
     public function affectedRows()
     {
-    	return mysql_affected_rows($this->linkid);
+    	return mysqli_affected_rows($this->linkid);
     }
 
     //返回插入的记录的ID
     public function lastInsertId()
     {
-    	return mysql_insert_id($this->linkid);
+    	return mysqli_insert_id($this->linkid);
     }
 
     //列出数据
