@@ -30,7 +30,7 @@ class sql
 			if($field['length'])
 			$sql .= "( {$field['length']} ) ";
 			if($field['charset'] == 'utf8')
-			$sql .= "CHARACTERSET {$field['charset']} COLLATE utf8_general_ci ";
+			$sql .= "CHARACTERSET utf8mb4 COLLATE utf8mb4_unicode_ci ";
 			elseif($field['charset'] == 'gbk')
 			$sql .= "CHARACTERSET {$field['charset']} COLLATE gbk_chinese_ci ";
 			/**
@@ -58,7 +58,7 @@ class sql
 		$sql = trim($sql,", ");
 		/**
 		if($field['charset'] == 'utf8')
-		$sql .= "\n) ENGINE=MYISAM CHARACTERSET utf8  COLLATE utf8_general_ci";
+		$sql .= "\n) ENGINE=InnoDB CHARACTERSET utf8mb4 COLLATE utf8mb4_unicode_ci";
 		else
 		$sql .= "\n) ENGINE=MYISAM CHARACTERSET gbk  COLLATE gbk_chinese_ci";
 		**/
@@ -123,7 +123,7 @@ class sql
 						if($field['fieldcharset'] == 'gbk')
 						$sql .= "CHARACTER SET {$field['fieldcharset']} COLLATE gbk_chinese_ci ";
 						else
-						$sql .= "CHARACTER SET {$field['fieldcharset']} COLLATE utf8_general_ci ";
+						$sql .= "CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ";
 					}
 					/**
 					if($field['default'])
@@ -172,7 +172,7 @@ class sql
 						if($field['fieldcharset'] == 'gbk')
 						$sql .= "CHARACTER SET {$field['fieldcharset']} COLLATE gbk_chinese_ci ";
 						else
-						$sql .= "CHARACTER SET {$field['fieldcharset']} COLLATE utf8_general_ci ";
+						$sql .= "CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ";
 					}
 					/**
 					if($field['fielddefault'])

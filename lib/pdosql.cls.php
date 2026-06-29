@@ -35,7 +35,7 @@ class pdosql
 			{
 				$sql .= "( {$field['length']} ) ";
 			}
-            $sql .= "CHARACTERSET {$field['charset']} COLLATE utf8_general_ci ";
+            $sql .= "CHARACTERSET utf8mb4 COLLATE utf8mb4_unicode_ci ";
             $sql .= "NOT NULL ";
             if($field['auto'])
 			$sql .= 'AUTO_INCREMENT ';
@@ -114,7 +114,7 @@ class pdosql
                         if($field['fieldcharset'] == 'gbk')
                             $sql .= "CHARACTER SET {$field['fieldcharset']} COLLATE gbk_chinese_ci ";
                         else
-                            $sql .= "CHARACTER SET {$field['fieldcharset']} COLLATE utf8_general_ci ";
+                            $sql .= "CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ";
                     }
                     $sql .= "NOT NULL ";
 
@@ -156,7 +156,7 @@ class pdosql
                         if($field['fieldcharset'] == 'gbk')
                             $sql .= "CHARACTER SET {$field['fieldcharset']} COLLATE gbk_chinese_ci ";
                         else
-                            $sql .= "CHARACTER SET {$field['fieldcharset']} COLLATE utf8_general_ci ";
+                            $sql .= "CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ";
                     }
                     $sql .= "NOT NULL ";
 
