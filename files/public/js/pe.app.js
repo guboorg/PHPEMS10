@@ -1073,6 +1073,32 @@ function inituploader()
 	});
 }
 
+
+
+function initImageFallback(scope){
+	var placeholder = 'files/public/img/noimage.gif';
+	var selector = 'img';
+	var apply = function(){
+		$(scope || document).find(selector).each(function(){
+			if(!$(this).attr('data-placeholder-bound'))
+			{
+				$(this).attr('data-placeholder-bound','1');
+				$(this).on('error',function(){
+					if($(this).attr('src') != placeholder)
+					{
+						$(this).attr('src',placeholder);
+					}
+				});
+				if(!$(this).attr('src'))
+				{
+					$(this).attr('src',placeholder);
+				}
+			}
+		});
+	};
+	apply();
+	$(document).ajaxComplete(apply);
+}
 $(function(){
 	$(".autoloaditem").each(function(){
 		if($(this).attr('autoload') && $(this).attr('autoload') != '')
@@ -1096,6 +1122,7 @@ $(function(){
 	$('a.poproom').popover();
 	//$('.sortable').sortable();
 	$('.fineuploader').each(inituploader);
+	initImageFallback();
 	$('body').delegate('.listimgselector','dblclick',function(){$(this).remove();});
     try
     {
