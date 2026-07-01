@@ -46,15 +46,15 @@
 								                <li class="text-center">
 								                    <div class="thumbnail">
 														<img class="qq-thumbnail-selector" alt="点击上传新图片">
-														<input type="hidden" class="qq-edit-filename-selector" name="args[thumb]" tabindex="0" value="{x2;if:$elem['seldata']['thumb']}{x2;$elem['seldata']['thumb']}{x2;else}app/core/styles/images/noimage.gif{x2;endif}">
+														<input type="hidden" class="qq-edit-filename-selector" name="args[thumb]" tabindex="0" value="{x2;if:$elem['seldata']['thumb']}{x2;$elem['seldata']['thumb']}{x2;else}files/public/img/noimage.gif{x2;endif}">
 													</div>
 								                </li>
 								            </ul>
 								            <ul class="qq-upload-list-selector list-unstyled" aria-live="polite" aria-relevant="additions removals" style="clear:both;">
 									            <li class="text-center">
 									                <div class="thumbnail">
-														<img class="qq-thumbnail-selector" src="{x2;if:$elem['seldata']['thumb']}{x2;$elem['seldata']['thumb']}{x2;else}app/core/styles/images/noimage.gif{x2;endif}" alt="点击上传新图片">
-														<input type="hidden" class="qq-edit-filename-selector" name="args[thumb]" tabindex="0" value="{x2;if:$elem['seldata']['thumb']}{x2;$elem['seldata']['thumb']}{x2;else}app/core/styles/images/noimage.gif{x2;endif}">
+														<img class="qq-thumbnail-selector" src="{x2;if:$elem['seldata']['thumb']}{x2;$elem['seldata']['thumb']}{x2;else}files/public/img/noimage.gif{x2;endif}" alt="点击上传新图片">
+														<input type="hidden" class="qq-edit-filename-selector" name="args[thumb]" tabindex="0" value="{x2;if:$elem['seldata']['thumb']}{x2;$elem['seldata']['thumb']}{x2;else}files/public/img/noimage.gif{x2;endif}">
 						                			</div>
 									            </li>
 									        </ul>

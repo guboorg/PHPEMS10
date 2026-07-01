@@ -262,7 +262,7 @@ class html
 	    	}
 	    	if(!$id)
 	    	$id = 'form'.$name;
-	    	if(!$value)$value = 'app/core/styles/img/noimage.gif';
+		if(!$value)$value = 'files/public/img/noimage.gif';
     	}
     	$str = <<<EOF
     	<script type="text/template" id="pe-template-$id">
