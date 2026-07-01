@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<meta name="google" content="notranslate">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>PDF阅读</title>
+	<title>{x2;if:$doc['doctitle']}{x2;$doc['doctitle']} - {x2;endif}PDF阅读 - PHPEMS模拟考试系统</title>
 	<link rel="stylesheet" href="files/public/js/pdf/viewer.css">
 	<!-- This snippet is used in production (included from viewer.html) -->
 	<link rel="resource" type="application/l10n" href="files/public/js/pdf/locale/locale.properties">
