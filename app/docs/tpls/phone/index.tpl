@@ -19,7 +19,7 @@
 		    		{x2;tree:$contents[2]['data'],content,cid}
 		    		<div class="swiper-slide">
 		    			<a href="index.php?content-phone-content&contentid={x2;v:content['contentid']}" class="ajax" data-page="rollpage" data-target="rollpage">
-		    				<img src="{x2;v:content['contentthumb']}">
+						<img src="{x2;if:v:content['contentthumb']}{x2;v:content['contentthumb']}{x2;else}files/public/img/noimage.gif{x2;endif}">
 		    			</a>
 		    		</div>
 		    		{x2;endtree}
@@ -35,7 +35,7 @@
 							<h5>在线考试</h5>
 							<p style="font-size:1rem;">在线练习 模拟考试</p>
 							<p>
-								<img src="app/core/styles/img/item.png" style="width:6rem;"/>
+								<img src="files/public/img/noimage.gif" style="width:6rem;"/>
 							</p>
 						</a>
 					</div>
@@ -46,7 +46,7 @@
 							<h5>视频课程</h5>
 							<p style="font-size:1rem;">课程课件 在线学习</p>
 							<p>
-								<img src="app/core/styles/img/item.png" style="width:6rem;"/>
+								<img src="files/public/img/noimage.gif" style="width:6rem;"/>
 							</p>
 						</a>
 					</div>
@@ -57,7 +57,7 @@
 							<h5>考试资讯</h5>
 							<p style="font-size:1rem;">考试资讯 相关信息</p>
 							<p>
-								<img src="app/core/styles/img/item.png" style="width:6rem;"/>
+								<img src="files/public/img/noimage.gif" style="width:6rem;"/>
 							</p>
 						</a>
 					</div>
@@ -90,7 +90,7 @@
 				{x2;tree:$courses['data'],course,cid}
 				<div class="media">
 					<a class="pull-left ajax" href="index.php?course-phone-course&csid={x2;v:course['csid']}" data-target="coursecontent" data-page="coursecontent" style="width:8rem;">
-						<img src="{x2;v:course['csthumb']}" style="width:8rem;" alt="{x2;v:course['cstitle']}">
+						<img src="{x2;if:v:course['csthumb']}{x2;v:course['csthumb']}{x2;else}files/public/img/paper.jpg{x2;endif}" style="width:8rem;" alt="{x2;v:course['cstitle']}">
 					</a>
 					<div class="media-body">
 						<h5 class="media-heading"><a class="ajax" href="index.php?course-phone-course&csid={x2;v:course['csid']}" data-target="coursecontent" data-page="coursecontent">{x2;v:course['cstitle']}</a></h5>

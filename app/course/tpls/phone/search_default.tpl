@@ -17,7 +17,7 @@
 			<div class="box itembox" style="padding-top:20px;">
 				<div class="col-xs-3">
 					<a href="index.php?course-app-course&csid={x2;v:content['csid']}" class="thumbnail pull-left">
-						<img src="{x2;v:content['csthumb']}" alt="" width="100%">
+						<img src="{x2;if:v:content['csthumb']}{x2;v:content['csthumb']}{x2;else}files/public/img/paper.jpg{x2;endif}" alt="" width="100%">
 					</a>
 				</div>
 				<div class="col-xs-9">
