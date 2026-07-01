@@ -57,23 +57,23 @@ CREATE TABLE `x2_app`  (
 -- ----------------------------
 INSERT INTO `x2_app` VALUES ('user', '用户', 'files/attach/images/content/20130401/13647895355562.png.png', 1, 'a:9:{s:11:\"closeregist\";s:1:\"0\";s:9:\"registype\";s:1:\"0\";s:11:\"managemodel\";s:1:\"0\";s:10:\"loginmodel\";s:1:\"0\";s:11:\"emailverify\";s:1:\"0\";s:12:\"emailaccount\";s:0:\"\";s:13:\"emailpassword\";s:0:\"\";s:9:\"regfields\";s:11:\"useraddress\";s:9:\"outfields\";s:11:\"useraddress\";}');
 INSERT INTO `x2_app` VALUES ('exam', '考试', '*value*', 1, 'a:2:{s:10:\"autorecord\";s:1:\"1\";s:14:\"recordperiodic\";s:0:\"\";}');
-INSERT INTO `x2_app` VALUES ('seminar', '专题', 'app/core/styles/images/noimage.gif', 0, '');
+INSERT INTO `x2_app` VALUES ('seminar', '专题', 'files/public/img/noimage.gif', 0, '');
 INSERT INTO `x2_app` VALUES ('core', '全局', '*value*', 1, '');
 INSERT INTO `x2_app` VALUES ('document', '文件', '*value*', 1, '');
 INSERT INTO `x2_app` VALUES ('content', '内容', '*value*', 1, '');
-INSERT INTO `x2_app` VALUES ('item', '商品', 'app/core/styles/images/noimage.gif', 1, '');
-INSERT INTO `x2_app` VALUES ('weixin', '微信', 'app/core/styles/images/noimage.gif', 0, '');
+INSERT INTO `x2_app` VALUES ('item', '商品', 'files/public/img/noimage.gif', 1, '');
+INSERT INTO `x2_app` VALUES ('weixin', '微信', 'files/public/img/noimage.gif', 0, '');
 INSERT INTO `x2_app` VALUES ('bank', '财务', '*value*', 1, '');
 INSERT INTO `x2_app` VALUES ('course', '课程', '*value*', 1, '');
 INSERT INTO `x2_app` VALUES ('certificate', '证书', 'files/attach/images/content/20190912/15683023154368.jpg', 1, '');
-INSERT INTO `x2_app` VALUES ('docs', '文档', 'app/core/styles/images/noimage.gif', 0, '');
+INSERT INTO `x2_app` VALUES ('docs', '文档', 'files/public/img/noimage.gif', 0, '');
 INSERT INTO `x2_app` VALUES ('autoform', '表单', 'files/attach/images/content/20191104/15728805945530.jpg', 0, '');
-INSERT INTO `x2_app` VALUES ('job', '招聘', 'app/core/styles/images/noimage.gif', 0, '');
-INSERT INTO `x2_app` VALUES ('ask', '问答', 'app/core/styles/images/noimage.gif', 1, '');
-INSERT INTO `x2_app` VALUES ('info', '信息', 'app/core/styles/images/noimage.gif', 1, '');
-INSERT INTO `x2_app` VALUES ('survey', '调查', 'app/core/styles/images/noimage.gif', 1, '');
-INSERT INTO `x2_app` VALUES ('shop', '餐厅', 'app/core/styles/images/noimage.gif', 1, 'a:13:{s:8:\"webtitle\";s:12:\"海鲜烧烤\";s:8:\"telphone\";s:11:\"13800138000\";s:12:\"openprovince\";s:6:\"410000\";s:8:\"opencity\";s:6:\"410700\";s:8:\"openarea\";s:6:\"410702\";s:7:\"address\";s:9:\"洪门镇\";s:8:\"webmajor\";s:9:\"中餐厅\";s:12:\"itemlisttype\";s:1:\"1\";s:4:\"locx\";d:113.933081;s:4:\"locy\";d:35.284830999999997;s:12:\"shopdescribe\";s:31:\"&lt;p&gt;海鲜烧烤&lt;/p&gt;\";s:7:\"website\";a:17:{s:8:\"webtitle\";s:18:\"海鲜烧烤店铺\";s:8:\"telphone\";s:11:\"13800138000\";s:12:\"openprovince\";s:6:\"410000\";s:8:\"opencity\";s:6:\"410700\";s:8:\"openarea\";s:6:\"410702\";s:7:\"address\";s:9:\"洪门镇\";s:8:\"webmajor\";s:9:\"中餐厅\";s:12:\"itemlisttype\";s:1:\"1\";s:4:\"locx\";d:113.933094;s:4:\"locy\";d:35.284868000000003;s:12:\"shopdescribe\";s:31:\"&lt;p&gt;海鲜烧烤&lt;/p&gt;\";s:13:\"shopadvstring\";s:18:\"海鲜烧烤店铺\";s:12:\"qrcodestring\";s:18:\"海鲜烧烤店铺\";s:10:\"shopappurl\";s:21:\"http://www.phpems.net\";s:15:\"shopworkingtime\";a:4:{i:0;a:3:{s:4:\"name\";s:6:\"早市\";s:9:\"starttime\";s:5:\"04:00\";s:7:\"endtime\";s:5:\"10:00\";}i:1;a:3:{s:4:\"name\";s:6:\"午市\";s:9:\"starttime\";s:7:\"11：00\";s:7:\"endtime\";s:7:\"15：00\";}i:2;a:3:{s:4:\"name\";s:6:\"晚市\";s:9:\"starttime\";s:7:\"17：00\";s:7:\"endtime\";s:7:\"21：00\";}i:3;a:3:{s:4:\"name\";s:6:\"夜宵\";s:9:\"starttime\";s:7:\"22：00\";s:7:\"endtime\";s:7:\"02：00\";}}s:10:\"shoppdtime\";a:4:{i:0;s:1:\"1\";i:1;s:1:\"1\";i:2;s:1:\"1\";i:3;s:1:\"1\";}s:13:\"shoptabletype\";a:6:{i:0;s:1:\"1\";i:1;s:1:\"2\";i:2;s:1:\"4\";i:3;s:1:\"6\";i:4;s:1:\"8\";i:5;s:2:\"16\";}}s:4:\"shop\";a:6:{s:13:\"shopadvstring\";s:18:\"海鲜烧烤店铺\";s:12:\"qrcodestring\";s:18:\"海鲜烧烤店铺\";s:10:\"shopappurl\";s:21:\"http://www.phpems.net\";s:15:\"shopworkingtime\";a:4:{i:0;a:4:{s:4:\"name\";s:6:\"早市\";s:9:\"starttime\";s:5:\"04:00\";s:7:\"endtime\";s:5:\"09:00\";s:7:\"disable\";s:1:\"1\";}i:1;a:4:{s:4:\"name\";s:6:\"午市\";s:9:\"starttime\";s:7:\"11：00\";s:7:\"endtime\";s:7:\"15：00\";s:7:\"disable\";s:1:\"1\";}i:2;a:3:{s:4:\"name\";s:6:\"晚市\";s:9:\"starttime\";s:7:\"17：00\";s:7:\"endtime\";s:7:\"21：00\";}i:3;a:3:{s:4:\"name\";s:6:\"夜宵\";s:9:\"starttime\";s:7:\"22：00\";s:7:\"endtime\";s:7:\"02：00\";}}s:10:\"shoppdtime\";a:4:{i:0;s:1:\"1\";i:1;s:1:\"1\";i:2;s:1:\"1\";i:3;s:1:\"1\";}s:13:\"shoptabletype\";a:5:{i:0;s:1:\"1\";i:1;s:1:\"2\";i:2;s:1:\"4\";i:3;s:1:\"6\";i:4;s:1:\"8\";}}}');
-INSERT INTO `x2_app` VALUES ('enroll', '报名', 'app/core/styles/images/noimage.gif', 1, '');
+INSERT INTO `x2_app` VALUES ('job', '招聘', 'files/public/img/noimage.gif', 0, '');
+INSERT INTO `x2_app` VALUES ('ask', '问答', 'files/public/img/noimage.gif', 1, '');
+INSERT INTO `x2_app` VALUES ('info', '信息', 'files/public/img/noimage.gif', 1, '');
+INSERT INTO `x2_app` VALUES ('survey', '调查', 'files/public/img/noimage.gif', 1, '');
+INSERT INTO `x2_app` VALUES ('shop', '餐厅', 'files/public/img/noimage.gif', 1, 'a:13:{s:8:\"webtitle\";s:12:\"海鲜烧烤\";s:8:\"telphone\";s:11:\"13800138000\";s:12:\"openprovince\";s:6:\"410000\";s:8:\"opencity\";s:6:\"410700\";s:8:\"openarea\";s:6:\"410702\";s:7:\"address\";s:9:\"洪门镇\";s:8:\"webmajor\";s:9:\"中餐厅\";s:12:\"itemlisttype\";s:1:\"1\";s:4:\"locx\";d:113.933081;s:4:\"locy\";d:35.284830999999997;s:12:\"shopdescribe\";s:31:\"&lt;p&gt;海鲜烧烤&lt;/p&gt;\";s:7:\"website\";a:17:{s:8:\"webtitle\";s:18:\"海鲜烧烤店铺\";s:8:\"telphone\";s:11:\"13800138000\";s:12:\"openprovince\";s:6:\"410000\";s:8:\"opencity\";s:6:\"410700\";s:8:\"openarea\";s:6:\"410702\";s:7:\"address\";s:9:\"洪门镇\";s:8:\"webmajor\";s:9:\"中餐厅\";s:12:\"itemlisttype\";s:1:\"1\";s:4:\"locx\";d:113.933094;s:4:\"locy\";d:35.284868000000003;s:12:\"shopdescribe\";s:31:\"&lt;p&gt;海鲜烧烤&lt;/p&gt;\";s:13:\"shopadvstring\";s:18:\"海鲜烧烤店铺\";s:12:\"qrcodestring\";s:18:\"海鲜烧烤店铺\";s:10:\"shopappurl\";s:21:\"http://www.phpems.net\";s:15:\"shopworkingtime\";a:4:{i:0;a:3:{s:4:\"name\";s:6:\"早市\";s:9:\"starttime\";s:5:\"04:00\";s:7:\"endtime\";s:5:\"10:00\";}i:1;a:3:{s:4:\"name\";s:6:\"午市\";s:9:\"starttime\";s:7:\"11：00\";s:7:\"endtime\";s:7:\"15：00\";}i:2;a:3:{s:4:\"name\";s:6:\"晚市\";s:9:\"starttime\";s:7:\"17：00\";s:7:\"endtime\";s:7:\"21：00\";}i:3;a:3:{s:4:\"name\";s:6:\"夜宵\";s:9:\"starttime\";s:7:\"22：00\";s:7:\"endtime\";s:7:\"02：00\";}}s:10:\"shoppdtime\";a:4:{i:0;s:1:\"1\";i:1;s:1:\"1\";i:2;s:1:\"1\";i:3;s:1:\"1\";}s:13:\"shoptabletype\";a:6:{i:0;s:1:\"1\";i:1;s:1:\"2\";i:2;s:1:\"4\";i:3;s:1:\"6\";i:4;s:1:\"8\";i:5;s:2:\"16\";}}s:4:\"shop\";a:6:{s:13:\"shopadvstring\";s:18:\"海鲜烧烤店铺\";s:12:\"qrcodestring\";s:18:\"海鲜烧烤店铺\";s:10:\"shopappurl\";s:21:\"http://www.phpems.net\";s:15:\"shopworkingtime\";a:4:{i:0;a:4:{s:4:\"name\";s:6:\"早市\";s:9:\"starttime\";s:5:\"04:00\";s:7:\"endtime\";s:5:\"09:00\";s:7:\"disable\";s:1:\"1\";}i:1;a:4:{s:4:\"name\";s:6:\"午市\";s:9:\"starttime\";s:7:\"11：00\";s:7:\"endtime\";s:7:\"15：00\";s:7:\"disable\";s:1:\"1\";}i:2;a:3:{s:4:\"name\";s:6:\"晚市\";s:9:\"starttime\";s:7:\"17：00\";s:7:\"endtime\";s:7:\"21：00\";}i:3;a:3:{s:4:\"name\";s:6:\"夜宵\";s:9:\"starttime\";s:7:\"22：00\";s:7:\"endtime\";s:7:\"02：00\";}}s:10:\"shoppdtime\";a:4:{i:0;s:1:\"1\";i:1;s:1:\"1\";i:2;s:1:\"1\";i:3;s:1:\"1\";}s:13:\"shoptabletype\";a:5:{i:0;s:1:\"1\";i:1;s:1:\"2\";i:2;s:1:\"4\";i:3;s:1:\"6\";i:4;s:1:\"8\";}}}');
+INSERT INTO `x2_app` VALUES ('enroll', '报名', 'files/public/img/noimage.gif', 1, '');
 
 -- ----------------------------
 -- Table structure for x2_area
@@ -277,22 +277,22 @@ INSERT INTO `x2_category` VALUES (2, 'content', 0, '首页头图', 'files/attach
 INSERT INTO `x2_category` VALUES (3, 'content', 0, '考试资料', 'files/attach/images/content/20160630/14672817048286.jpg', '', 0, 0, '', 'category_default', 'a:2:{s:8:\"pubusers\";s:0:\"\";s:9:\"pubgroups\";s:0:\"\";}', 0, 5, 1);
 INSERT INTO `x2_category` VALUES (4, 'content', 0, '帮助信息', 'files/attach/images/content/20160630/14672817317018.jpg', '', 0, 0, '&lt;h1 class=&quot;wikititle&quot;&gt;区委区为企鹅&lt;/h1&gt;\r\n\r\n&lt;h2 class=&quot;wikititle&quot;&gt;这是一个什么段落&lt;/h2&gt;', 'category_default', 'a:2:{s:8:\"pubusers\";s:0:\"\";s:9:\"pubgroups\";s:0:\"\";}', 0, 0, 1);
 INSERT INTO `x2_category` VALUES (5, 'course', 0, '会计基础', 'files/attach/images/content/20180709/15311345313268.png', '', 0, 0, '', 'category_default', 'a:2:{s:8:\"pubusers\";s:0:\"\";s:9:\"pubgroups\";s:0:\"\";}', 0, 6, 0);
-INSERT INTO `x2_category` VALUES (11, 'content', 0, '友情链接', 'app/core/styles/images/noimage.gif', '', 0, 4, '', 'category_default', 'a:2:{s:8:\\\"pubusers\\\";s:0:\\\"\\\";s:9:\\\"pubgroups\\\";s:0:\\\"\\\";}', 0, 5, 0);
-INSERT INTO `x2_category` VALUES (12, 'docs', 0, '人物', 'app/core/styles/images/noimage.gif', '', 0, 0, '', 'category_default', 'a:2:{s:8:\"pubusers\";s:0:\"\";s:9:\"pubgroups\";s:0:\"\";}', 0, 5, 0);
-INSERT INTO `x2_category` VALUES (13, 'course', 0, '会计实务', 'app/core/styles/images/noimage.gif', '', 0, 5, '', 'category_default', 'a:2:{s:8:\\\"pubusers\\\";s:0:\\\"\\\";s:9:\\\"pubgroups\\\";s:0:\\\"\\\";}', 0, 0, 0);
-INSERT INTO `x2_category` VALUES (14, 'content', 0, '联系我们', 'app/core/styles/images/noimage.gif', '', 0, 4, '', 'category_default', '', 0, 0, 0);
-INSERT INTO `x2_category` VALUES (16, 'course', 0, '商务英语', 'app/core/styles/images/noimage.gif', '', 0, 0, '', 'category_default', 'a:2:{s:8:\\\"pubusers\\\";s:0:\\\"\\\";s:9:\\\"pubgroups\\\";s:0:\\\"\\\";}', 1, 0, 0);
-INSERT INTO `x2_category` VALUES (17, 'course', 0, '英语', 'app/core/styles/images/noimage.gif', '', 0, 16, '', 'category_default', 'a:2:{s:8:\\\"pubusers\\\";s:0:\\\"\\\";s:9:\\\"pubgroups\\\";s:0:\\\"\\\";}', 0, 0, 0);
-INSERT INTO `x2_category` VALUES (18, 'docs', 0, '英语', 'app/core/styles/images/noimage.gif', '', 0, 12, '', 'category_default', 'a:2:{s:8:\\\"pubusers\\\";s:0:\\\"\\\";s:9:\\\"pubgroups\\\";s:0:\\\"\\\";}', 0, 0, 0);
-INSERT INTO `x2_category` VALUES (19, 'docs', 0, '英语', 'app/core/styles/images/noimage.gif', '', 0, 0, '', 'category_default', 'a:2:{s:8:\"pubusers\";s:0:\"\";s:9:\"pubgroups\";s:0:\"\";}', 0, 5, 0);
-INSERT INTO `x2_category` VALUES (21, 'docs', 0, '数学', 'app/core/styles/images/noimage.gif', '', 0, 0, '', 'category_default', 'a:2:{s:8:\"pubusers\";s:0:\"\";s:9:\"pubgroups\";s:0:\"\";}', 0, 5, 0);
-INSERT INTO `x2_category` VALUES (22, 'course', 0, '应用英语', 'app/core/styles/images/noimage.gif', '', 0, 0, '', 'category_default', 'a:2:{s:8:\\\"pubusers\\\";s:0:\\\"\\\";s:9:\\\"pubgroups\\\";s:0:\\\"\\\";}', 1, 0, 0);
-INSERT INTO `x2_category` VALUES (46, 'item', 0, '默认分类', 'app/core/styles/images/noimage.gif', '', 0, 0, '', 'category_default', '', 0, 0, 0);
-INSERT INTO `x2_category` VALUES (24, 'seminar', 0, '活动', 'app/core/styles/images/noimage.gif', '', 0, 0, '', 'category_default', '', 0, 0, 0);
-INSERT INTO `x2_category` VALUES (25, 'seminar', 0, '会议', 'app/core/styles/images/noimage.gif', '', 0, 0, '', 'category_default', '', 0, 0, 0);
-INSERT INTO `x2_category` VALUES (26, 'content', 0, '网站公告', 'app/core/styles/images/noimage.gif', '', 0, 4, '', 'category_default', '', 0, 6, 0);
-INSERT INTO `x2_category` VALUES (32, 'content', 546, '初级会计', 'app/core/styles/images/noimage.gif', '', 0, 1, '&lt;p&gt;56464&lt;/p&gt;', 'category_page', '', 0, 0, 0);
-INSERT INTO `x2_category` VALUES (33, 'course', 0, '会计技能', 'app/core/styles/images/noimage.gif', '', 0, 5, '', 'category_default', 'a:2:{s:8:\"pubusers\";s:0:\"\";s:9:\"pubgroups\";s:0:\"\";}', 0, 0, 0);
+INSERT INTO `x2_category` VALUES (11, 'content', 0, '友情链接', 'files/public/img/noimage.gif', '', 0, 4, '', 'category_default', 'a:2:{s:8:\\\"pubusers\\\";s:0:\\\"\\\";s:9:\\\"pubgroups\\\";s:0:\\\"\\\";}', 0, 5, 0);
+INSERT INTO `x2_category` VALUES (12, 'docs', 0, '人物', 'files/public/img/noimage.gif', '', 0, 0, '', 'category_default', 'a:2:{s:8:\"pubusers\";s:0:\"\";s:9:\"pubgroups\";s:0:\"\";}', 0, 5, 0);
+INSERT INTO `x2_category` VALUES (13, 'course', 0, '会计实务', 'files/public/img/noimage.gif', '', 0, 5, '', 'category_default', 'a:2:{s:8:\\\"pubusers\\\";s:0:\\\"\\\";s:9:\\\"pubgroups\\\";s:0:\\\"\\\";}', 0, 0, 0);
+INSERT INTO `x2_category` VALUES (14, 'content', 0, '联系我们', 'files/public/img/noimage.gif', '', 0, 4, '', 'category_default', '', 0, 0, 0);
+INSERT INTO `x2_category` VALUES (16, 'course', 0, '商务英语', 'files/public/img/noimage.gif', '', 0, 0, '', 'category_default', 'a:2:{s:8:\\\"pubusers\\\";s:0:\\\"\\\";s:9:\\\"pubgroups\\\";s:0:\\\"\\\";}', 1, 0, 0);
+INSERT INTO `x2_category` VALUES (17, 'course', 0, '英语', 'files/public/img/noimage.gif', '', 0, 16, '', 'category_default', 'a:2:{s:8:\\\"pubusers\\\";s:0:\\\"\\\";s:9:\\\"pubgroups\\\";s:0:\\\"\\\";}', 0, 0, 0);
+INSERT INTO `x2_category` VALUES (18, 'docs', 0, '英语', 'files/public/img/noimage.gif', '', 0, 12, '', 'category_default', 'a:2:{s:8:\\\"pubusers\\\";s:0:\\\"\\\";s:9:\\\"pubgroups\\\";s:0:\\\"\\\";}', 0, 0, 0);
+INSERT INTO `x2_category` VALUES (19, 'docs', 0, '英语', 'files/public/img/noimage.gif', '', 0, 0, '', 'category_default', 'a:2:{s:8:\"pubusers\";s:0:\"\";s:9:\"pubgroups\";s:0:\"\";}', 0, 5, 0);
+INSERT INTO `x2_category` VALUES (21, 'docs', 0, '数学', 'files/public/img/noimage.gif', '', 0, 0, '', 'category_default', 'a:2:{s:8:\"pubusers\";s:0:\"\";s:9:\"pubgroups\";s:0:\"\";}', 0, 5, 0);
+INSERT INTO `x2_category` VALUES (22, 'course', 0, '应用英语', 'files/public/img/noimage.gif', '', 0, 0, '', 'category_default', 'a:2:{s:8:\\\"pubusers\\\";s:0:\\\"\\\";s:9:\\\"pubgroups\\\";s:0:\\\"\\\";}', 1, 0, 0);
+INSERT INTO `x2_category` VALUES (46, 'item', 0, '默认分类', 'files/public/img/noimage.gif', '', 0, 0, '', 'category_default', '', 0, 0, 0);
+INSERT INTO `x2_category` VALUES (24, 'seminar', 0, '活动', 'files/public/img/noimage.gif', '', 0, 0, '', 'category_default', '', 0, 0, 0);
+INSERT INTO `x2_category` VALUES (25, 'seminar', 0, '会议', 'files/public/img/noimage.gif', '', 0, 0, '', 'category_default', '', 0, 0, 0);
+INSERT INTO `x2_category` VALUES (26, 'content', 0, '网站公告', 'files/public/img/noimage.gif', '', 0, 4, '', 'category_default', '', 0, 6, 0);
+INSERT INTO `x2_category` VALUES (32, 'content', 546, '初级会计', 'files/public/img/noimage.gif', '', 0, 1, '&lt;p&gt;56464&lt;/p&gt;', 'category_page', '', 0, 0, 0);
+INSERT INTO `x2_category` VALUES (33, 'course', 0, '会计技能', 'files/public/img/noimage.gif', '', 0, 5, '', 'category_default', 'a:2:{s:8:\"pubusers\";s:0:\"\";s:9:\"pubgroups\";s:0:\"\";}', 0, 0, 0);
 
 -- ----------------------------
 -- Table structure for x2_cequeue
@@ -4081,13 +4081,13 @@ CREATE TABLE `x2_content`  (
 -- ----------------------------
 -- Records of x2_content
 -- ----------------------------
-INSERT INTO `x2_content` VALUES (1, 26, 35, 1, 'peadmin', '', '测试公告', '测试公告', '测试公告', 'app/core/styles/images/noimage.gif', '', 1574930414, 0, 0, '测试公告', '', 0, 'content_default', '&lt;p&gt;测试公告&lt;/p&gt;', 10);
-INSERT INTO `x2_content` VALUES (2, 14, 35, 1, 'peadmin', '', '联系我们', '联系我们', '联系我们', 'app/core/styles/images/noimage.gif', '', 1574930434, 0, 0, '联系我们', '', 0, 'content_default', '&lt;p&gt;联系我们&lt;/p&gt;', 10);
-INSERT INTO `x2_content` VALUES (3, 11, 33, 1, 'peadmin', '', '测试连接1', '测试连接1', '测试连接1', 'app/core/styles/images/noimage.gif', '测试连接1', 1577015440, 0, 0, '测试连接1', '', 0, 'content_default', '&lt;p&gt;测试连接1&lt;/p&gt;', NULL);
-INSERT INTO `x2_content` VALUES (4, 26, 35, 1, 'peadmin', '', '测试公告1', '测试公告1', '测试公告1', 'app/core/styles/images/noimage.gif', '', 1577015436, 0, 0, '测试公告1', '', 0, 'content_default', '&lt;p&gt;测试公告1&lt;/p&gt;', 15);
+INSERT INTO `x2_content` VALUES (1, 26, 35, 1, 'peadmin', '', '测试公告', '测试公告', '测试公告', 'files/public/img/noimage.gif', '', 1574930414, 0, 0, '测试公告', '', 0, 'content_default', '&lt;p&gt;测试公告&lt;/p&gt;', 10);
+INSERT INTO `x2_content` VALUES (2, 14, 35, 1, 'peadmin', '', '联系我们', '联系我们', '联系我们', 'files/public/img/noimage.gif', '', 1574930434, 0, 0, '联系我们', '', 0, 'content_default', '&lt;p&gt;联系我们&lt;/p&gt;', 10);
+INSERT INTO `x2_content` VALUES (3, 11, 33, 1, 'peadmin', '', '测试连接1', '测试连接1', '测试连接1', 'files/public/img/noimage.gif', '测试连接1', 1577015440, 0, 0, '测试连接1', '', 0, 'content_default', '&lt;p&gt;测试连接1&lt;/p&gt;', NULL);
+INSERT INTO `x2_content` VALUES (4, 26, 35, 1, 'peadmin', '', '测试公告1', '测试公告1', '测试公告1', 'files/public/img/noimage.gif', '', 1577015436, 0, 0, '测试公告1', '', 0, 'content_default', '&lt;p&gt;测试公告1&lt;/p&gt;', 15);
 INSERT INTO `x2_content` VALUES (5, 2, 35, 1, 'peadmin', '', 'aa', 'a', 'aa', 'files/attach/images/content/20210830/16302939588772.jpg', '', 0, 1630293959, 0, 'a', '', 0, 'content_default', '&lt;p&gt;a&lt;/p&gt;', 27);
-INSERT INTO `x2_content` VALUES (6, 11, 35, 1, 'peadmin', '', '测试链接', '测试链接', '测试链接', 'app/core/styles/images/noimage.gif', 'http://www.163.com', 1574930139, 1611491093, 0, '测试链接', '', 0, 'content_default', '&lt;p&gt;测试链接&lt;/p&gt;', NULL);
-INSERT INTO `x2_content` VALUES (7, 26, 35, 1, 'peadmin', '', '考试通知', 'tags', '关键字', 'app/core/styles/images/noimage.gif', '', 1581913227, 1620458820, 0, '摘要', '', 0, 'content_default', '&lt;p&gt;内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容&lt;/p&gt;', 22);
+INSERT INTO `x2_content` VALUES (6, 11, 35, 1, 'peadmin', '', '测试链接', '测试链接', '测试链接', 'files/public/img/noimage.gif', 'http://www.163.com', 1574930139, 1611491093, 0, '测试链接', '', 0, 'content_default', '&lt;p&gt;测试链接&lt;/p&gt;', NULL);
+INSERT INTO `x2_content` VALUES (7, 26, 35, 1, 'peadmin', '', '考试通知', 'tags', '关键字', 'files/public/img/noimage.gif', '', 1581913227, 1620458820, 0, '摘要', '', 0, 'content_default', '&lt;p&gt;内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容&lt;/p&gt;', 22);
 
 -- ----------------------------
 -- Table structure for x2_coupon
@@ -4154,7 +4154,7 @@ CREATE TABLE `x2_course`  (
 -- Records of x2_course
 -- ----------------------------
 INSERT INTO `x2_course` VALUES (1, '测试', 14, 1, 'files/attach/images/content/20190720/15635927397674.jpg', 1, 1467215744, 1729478673, 0, '', 'https://dev.phpems.net/phpems/petpl2/files/attach/images/content/20240319/17107963707266.mp4', '', '', '', '', 0, 0);
-INSERT INTO `x2_course` VALUES (20, '湖南卫视高清直播测试', 14, 12, 'app/core/styles/images/noimage.gif', 1, 1580528728, 1666060249, 0, '&lt;p&gt;本地址仅测试直播使用，如有侵权，请联系QQ2241223009删除。&lt;/p&gt;', 'http://mpv-seg.videocc.net/5cb340c902/5/5cb340c902623bc5a86c97d42da4a7a5_1.mp4/index.m3u8', '', '', '', '', 0, 0);
+INSERT INTO `x2_course` VALUES (20, '湖南卫视高清直播测试', 14, 12, 'files/public/img/noimage.gif', 1, 1580528728, 1666060249, 0, '&lt;p&gt;本地址仅测试直播使用，如有侵权，请联系QQ2241223009删除。&lt;/p&gt;', 'http://mpv-seg.videocc.net/5cb340c902/5/5cb340c902623bc5a86c97d42da4a7a5_1.mp4/index.m3u8', '', '', '', '', 0, 0);
 INSERT INTO `x2_course` VALUES (7, '课件7', 15, 1, 'files/attach/images/content/20190720/15635931122951.jpg', 1, 1503560761, 1620458205, 0, '&lt;p&gt;课件7&lt;/p&gt;', '', '', '', '', 'files/attach/images/content/20210508/16204582045520.pdf', 0, 0);
 
 -- ----------------------------
@@ -4269,7 +4269,7 @@ CREATE TABLE `x2_docs`  (
 -- ----------------------------
 -- Records of x2_docs
 -- ----------------------------
-INSERT INTO `x2_docs` VALUES (1, '欧拉公式', 'app/core/styles/images/noimage.gif', 21, '', 2, 1681980169, 0, 0, '欧拉公式', '', 0, 1, 0, 0);
+INSERT INTO `x2_docs` VALUES (1, '欧拉公式', 'files/public/img/noimage.gif', 21, '', 2, 1681980169, 0, 0, '欧拉公式', '', 0, 1, 0, 0);
 
 -- ----------------------------
 -- Table structure for x2_enroll
