@@ -12,11 +12,13 @@
 							<span class="badge pull-right"><span id="timer_h">00</span>：<span id="timer_m">00</span>：<span id="timer_s">00</span></span>
 						</h2>
 						<ul class="list-img list-unstyled">
+                            {x2;if:$content['pdf_file']}
 							<li class="border padding">
 								<div class="desc" id="pdfViewer"></div>
 							</li>
+                            {x2;endif}
 							<li class="border padding">
-								<div class="desc">
+								<div class="desc{x2;if:!$content['pdf_file']} course-desc-large{x2;endif}">
                                     {x2;realhtml:$content['coursedescribe']}
 								</div>
 							</li>
@@ -63,9 +65,13 @@
 		</div>
 	</div>
 </div>
+<style>
+	.course-desc-large{min-height:720px;font-size:16px;line-height:1.8;}
+</style>
 <script>
 	$(function(){
         $('[data-toggle="tooltip"]').tooltip();
+        {x2;if:$content['pdf_file']}
         var pdf = $('<iframe src="index.php?course-app-course-pdfview&file={x2;$content['pdf_file']}" style="border:1px solid #999999;" frameborder="0" width="100%" height="720" border="0"></iframe>');
 	    $('#pdfViewer').append(pdf);
         var setting = {
@@ -81,6 +87,7 @@
             }
         }
         countdown(setting);
+        {x2;endif}
 	})
 </script>
 </body>

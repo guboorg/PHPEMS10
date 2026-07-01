@@ -9,11 +9,13 @@
 					<div class="content-box padding">
 						<h2 class="title">{x2;$content['coursetitle']}</h2>
 						<ul class="list-img list-unstyled">
+                            {x2;if:$content['course_files']}
                             <li class="border padding">
 								<div class="desc" id="videoPlayer" style="width: 100%;" data-id="{x2;$content['courseid']}"></div>
 							</li>
+                            {x2;endif}
 							<li class="border padding">
-								<div class="desc">
+								<div class="desc{x2;if:!$content['course_files']} course-desc-large{x2;endif}">
                                     {x2;realhtml:$content['coursedescribe']}
 								</div>
 							</li>
@@ -60,9 +62,13 @@
 		</div>
 	</div>
 </div>
+<style>
+	.course-desc-large{min-height:560px;font-size:16px;line-height:1.8;}
+</style>
 <script>
 $(function(){
     $('[data-toggle="tooltip"]').tooltip();
+    {x2;if:$content['course_files']}
 	var options = {
 		source:'{x2;$content['course_files']}',
 		poster:'{x2;$course['csthumb']}',
@@ -133,6 +139,7 @@ $(function(){
 			window.location.reload();
 		});
 	})
+    {x2;endif}
 });
 </script>
 </body>

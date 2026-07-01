@@ -11,9 +11,17 @@
 				<span class="fa fa-list-ol"></span>
 			</div>
 		</div>
+        {x2;if:$content['pdf_file']}
 		<div class="page-content header{x2;if:!$logs[$content['courseid']]['logstatus']} footer{x2;endif}">
 			<div id="pdfViewer" style="width: 100%;height: 100%;box-sizing: border-box;"></div>
 		</div>
+        {x2;else}
+        <div class="page-content header">
+            <div class="course-desc-large padding">
+                {x2;realhtml:$content['coursedescribe']}
+            </div>
+        </div>
+        {x2;endif}
 		<div class="page-content header hide{x2;if:!$logs[$content['courseid']]['logstatus']} footer{x2;endif}">
 			<div class="list-box bg">
 				<ol>
@@ -59,6 +67,7 @@
 				</ol>
 			</div>
 		</div>
+        {x2;if:$content['pdf_file']}
         {x2;if:!$logs[$content['courseid']]['logstatus']}
 		<div class="page-footer">
 			<ol class="pagination">
@@ -70,9 +79,14 @@
 			</ol>
 		</div>
         {x2;endif}
+        {x2;endif}
 	</div>
+    <style>
+        .course-desc-large{min-height:100%;font-size:1rem;line-height:1.8;background:#fff;box-sizing:border-box;}
+    </style>
 	<script>
         $(function(){
+            {x2;if:$content['pdf_file']}
             var pdf = $('<iframe src="index.php?course-phone-course-pdfview&file={x2;$content['pdf_file']}" style="border:1px solid #999999;width:100%;height:100%" frameborder="0" border="0"></iframe>');
             $('#pdfViewer').append(pdf);
             {x2;if:!$logs[$content['courseid']]['logstatus']}
@@ -90,10 +104,11 @@
             }
             countdown(setting);
             {x2;endif}
-			$('#pdf-menu').on('click',function(){
-                $('.page-content').toggleClass('hide');
-			});
             $('#videos-list').css('height',$(window).height() - $('.page-footer:first').height() - $('.page-header:first').height());
+            {x2;endif}
+            $('#pdf-menu').on('click',function(){
+                $('.page-content').toggleClass('hide');
+            });
         })
 	</script>
     {x2;if:!$userhash}

@@ -12,7 +12,13 @@
 			</div>
 		</div>
 		<div class="page-content header">
+            {x2;if:$content['course_files']}
 			<div id="videoPlayer" data-id="{x2;$content['courseid']}" style="width: 100%;"></div>
+            {x2;else}
+            <div class="course-desc-large padding">
+                {x2;realhtml:$content['coursedescribe']}
+            </div>
+            {x2;endif}
 			<div class="list-box bg" id="videos-list" style="overflow-y: scroll">
 				<ol>
 					<li class="unstyled">
@@ -58,10 +64,14 @@
 			</div>
 		</div>
 	</div>
+    <style>
+        .course-desc-large{font-size:1rem;line-height:1.8;background:#fff;box-sizing:border-box;}
+    </style>
 	<script src="files/public/js/clappr/clappr.min.js"></script>
 	<script>
 	$(function(){
         clearInterval(pep.recordVideo);
+        {x2;if:$content['course_files']}
 		$('#videoPlayer').html('');
 		var options = {
 			source:'{x2;$content['course_files']}',
@@ -134,6 +144,9 @@
 			});
 		})
         $('#videos-list').css('height',$(window).height() - $('#videoPlayer').outerHeight() - $('.page-header').first().outerHeight() - 2);
+        {x2;else}
+        $('#videos-list').css('height',$(window).height() - $('.course-desc-large').outerHeight() - $('.page-header').first().outerHeight() - 2);
+        {x2;endif}
 		pep.allowpre = true;
 	});
 	</script>
