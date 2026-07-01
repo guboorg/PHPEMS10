@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>PHPEMS模拟考试系统</title>
+    <title>{x2;if:$sessionvars['examsession']}{x2;v:sessionvars['examsession']} - {x2;endif}试卷预览 - PHPEMS模拟考试系统</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<link rel="stylesheet" type="text/css" href="files/public/css/bootstrap.css" />
