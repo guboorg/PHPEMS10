@@ -19,7 +19,7 @@
 		    		{x2;tree:$contents[2]['data'],content,cid}
 		    		<div class="swiper-slide">
 		    			<a href="index.php?content-phone-content&contentid={x2;v:content['contentid']}" class="ajax" data-page="rollpage" data-target="rollpage">
-		    				<img src="{x2;v:content['contentthumb']}">
+						<img src="{x2;if:v:content['contentthumb']}{x2;v:content['contentthumb']}{x2;else}files/public/img/noimage.gif{x2;endif}">
 		    			</a>
 		    		</div>
 		    		{x2;endtree}
@@ -33,7 +33,7 @@
 					<div class="text-center" style="padding:0.2rem;padding-top:1.5rem;">
 						<a href="index.php?exam-phone-index" class="ajax" data-page="mybasic" data-target="mybasic">
 							<p>
-								<img src="app/core/styles/img/exam.png" style="width:92%;"/>
+								<img src="files/public/img/paper.jpg" style="width:92%;"/>
 							</p>
 							<h5>在线考试</h5>
 						</a>
@@ -43,7 +43,7 @@
 					<div class="text-center" style="padding:0.2rem;padding-top:1.5rem;">
 						<a class="ajax" href="index.php?course-phone-index" data-target="course" data-page="course">
 							<p>
-								<img src="app/core/styles/img/video.png" style="width:92%;"/>
+								<img src="files/public/img/noimage.gif" style="width:92%;"/>
 							</p>
 							<h5>视频课程</h5>
 						</a>
@@ -53,7 +53,7 @@
 					<div class="text-center" style="padding:0.2rem;padding-top:1.5rem;">
 						<a href="index.php?certificate-phone" data-target="certificate" data-page="certificate" class="ajax">
 							<p>
-								<img src="app/core/styles/img/t3.png" style="width:92%;"/>
+								<img src="files/public/img/noimage.gif" style="width:92%;"/>
 							</p>
 							<h5>证书申请</h5>
 						</a>
@@ -63,7 +63,7 @@
 					<div class="text-center" style="padding:0.2rem;padding-top:1.5rem;">
 						<a href="index.php?content-phone-category" data-target="contentcategory" data-page="contentcategory" class="ajax">
 							<p>
-								<img src="app/core/styles/img/news.png" style="width:92%;"/>
+								<img src="files/public/img/noimage.gif" style="width:92%;"/>
 							</p>
 							<h5>考试资讯</h5>
 						</a>
@@ -80,7 +80,7 @@
 				<div class="col-xs-6" style="padding:3px;">
 					<div style="background-color:#FFFFFF;padding:7px">
 						<a href="index.php?exam-phone-index-setCurrentBasic&basicid={x2;v:basic['basicid']}" class="ajax" data-target="basic" data-page="basic">
-							<img src="{x2;v:basic['basicthumb']}" style="width:100%;"/>
+							<img src="{x2;if:v:basic['basicthumb']}{x2;v:basic['basicthumb']}{x2;else}files/public/img/paper.jpg{x2;endif}" style="width:100%;"/>
 						</a>
 						<h5 class="text-center">
 							<a href="index.php?exam-phone-index-setCurrentBasic&basicid={x2;v:basic['basicid']}" class="ajax" data-target="basic" data-page="basic">{x2;v:basic['basic']}</a>
@@ -101,7 +101,7 @@
 				<div class="col-xs-6" style="padding:3px;">
 					<div style="background-color:#FFFFFF;padding:7px">
 						<a class="ajax" href="index.php?course-phone-course&csid={x2;v:course['csid']}" data-target="courseplatform" data-page="courseplatform" style="width:8rem;">
-							<img src="{x2;v:course['csthumb']}" style="width:100%;" alt="{x2;v:course['cstitle']}">
+							<img src="{x2;if:v:course['csthumb']}{x2;v:course['csthumb']}{x2;else}files/public/img/paper.jpg{x2;endif}" style="width:100%;" alt="{x2;v:course['cstitle']}">
 						</a>
 						<h5 class="text-center"><a class="ajax" href="index.php?course-phone-course&csid={x2;v:course['csid']}" data-target="courseplatform" data-page="courseplatform">{x2;v:course['cstitle']}</a></h5>
 					</div>

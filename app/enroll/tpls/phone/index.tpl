@@ -19,7 +19,7 @@
 						<div class="col-4x">
 							<div class="rows illus">
 								<a href="index.php?enroll-phone-enroll&enbid={x2;v:enroll['enbid']}" class="ajax">
-									<img src="{x2;v:enroll['enbthumb']}">
+									<img src="{x2;if:v:enroll['enbthumb']}{x2;v:enroll['enbthumb']}{x2;else}files/public/img/noimage.gif{x2;endif}">
 								</a>
 							</div>
 						</div>

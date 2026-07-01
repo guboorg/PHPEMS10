@@ -21,7 +21,7 @@
 						<a href="index.php?certificate-phone-certificate-detail&ceqid={x2;v:certificate['ceqid']}" class="ajax">
 							<div class="col-4x">
 								<div class="rows illus">
-									<img src="{x2;v:certificate['cethumb']}">
+									<img src="{x2;if:v:certificate['cethumb']}{x2;v:certificate['cethumb']}{x2;else}files/public/img/noimage.gif{x2;endif}">
 								</div>
 							</div>
 							<div class="col-4l">

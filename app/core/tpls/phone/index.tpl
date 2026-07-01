@@ -13,7 +13,7 @@
                     {x2;tree:$topimgs['data'],content,cid}
 					<div class="swiper-slide">
 						<a class="ajax" href="index.php?content-phone-content&contentid={x2;v:content['pccontentid']}">
-							<img src="{x2;v:content['pcthumb']}" style="max-width: 100%;height:350px;"/>
+							<img src="{x2;if:v:content['pcthumb']}{x2;v:content['pcthumb']}{x2;else}files/public/img/noimage.gif{x2;endif}" style="max-width: 100%;height:350px;"/>
 						</a>
 					</div>
                     {x2;endif}
