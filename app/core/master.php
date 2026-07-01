@@ -35,6 +35,10 @@ class app
 		}
 		$user = $this->user->getUserById($_user['sessionuserid']);
 		$user['manager_apps'] = unserialize($user['manager_apps']);
+		if(!is_array($user['manager_apps']))
+		{
+			$user['manager_apps'] = array();
+		}
 		$this->tpl->assign('_user',$user);
 		$this->tpl->assign('action',$this->ev->url(2)?$this->ev->url(2):'user');
 		$localapps = $this->apps->getLocalAppList();

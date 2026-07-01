@@ -43,6 +43,10 @@ class app
 
 		$user = $this->user->getUserById($_user['sessionuserid']);
 		$user['manager_apps'] = unserialize($user['manager_apps']);
+		if(!is_array($user['manager_apps']))
+		{
+			$user['manager_apps'] = array();
+		}
 		$this->tpl->assign('_user',$user);
 		if(!in_array(\PHPEMS\ginkgo::$app,$user['manager_apps']) && $apps['user']['appsetting']['managemodel'])
 		{

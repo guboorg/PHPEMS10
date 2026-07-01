@@ -40,6 +40,10 @@ class app
 		$this->ce = \PHPEMS\ginkgo::make('ce','certificate');
 		$user = $this->user->getUserById($_user['sessionuserid']);
 		$user['manager_apps'] = unserialize($user['manager_apps']);
+		if(!is_array($user['manager_apps']))
+		{
+			$user['manager_apps'] = array();
+		}
 		$this->tpl->assign('_user',$user);
 		$localapps = $this->apps->getLocalAppList();
 		$apps = $this->apps->getAppList();
