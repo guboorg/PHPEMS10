@@ -4462,7 +4462,7 @@ CREATE TABLE `x2_exercise`  (
   INDEX `exeruserid`(`exeruserid`) USING BTREE,
   INDEX `exerbasicid`(`exerbasicid`) USING BTREE,
   INDEX `exerknowsid`(`exerknowsid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = FIXED;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of x2_exercise
@@ -4481,7 +4481,7 @@ CREATE TABLE `x2_favor`  (
   PRIMARY KEY (`favorid`) USING BTREE,
   INDEX `favoruserid`(`favoruserid`, `favorquestionid`, `favortime`) USING BTREE,
   INDEX `favorsubjectid`(`favorsubjectid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = FIXED;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of x2_favor
@@ -4551,7 +4551,7 @@ CREATE TABLE `x2_log`  (
   PRIMARY KEY (`logid`) USING BTREE,
   INDEX `loguserid`(`loguserid`, `logcourseid`) USING BTREE,
   INDEX `logtime`(`logtime`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 257 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = FIXED;
+) ENGINE = InnoDB AUTO_INCREMENT = 257 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of x2_log
@@ -4684,7 +4684,7 @@ CREATE TABLE `x2_openbasics`  (
   `obendtime` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`obid`) USING BTREE,
   INDEX `oluserid`(`obuserid`, `obbasicid`, `obtime`, `obendtime`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = FIXED;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of x2_openbasics
@@ -4703,7 +4703,7 @@ CREATE TABLE `x2_opencourse`  (
   `ocendtime` int(11) NOT NULL,
   PRIMARY KEY (`ocid`) USING BTREE,
   INDEX `ocuserid`(`ocuserid`, `occourseid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = FIXED;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of x2_opencourse
@@ -4812,7 +4812,7 @@ CREATE TABLE `x2_progress`  (
   INDEX `prstatus`(`prstatus`) USING BTREE,
   INDEX `prscourseid`(`prscourseid`) USING BTREE,
   INDEX `prsexamid`(`prsexamid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = FIXED;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of x2_progress
@@ -4881,7 +4881,7 @@ CREATE TABLE `x2_quest2knows`  (
   PRIMARY KEY (`qkid`) USING BTREE,
   INDEX `qkquestionid`(`qkquestionid`, `qkknowsid`) USING BTREE,
   INDEX `qktype`(`qktype`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9601 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = FIXED;
+) ENGINE = InnoDB AUTO_INCREMENT = 9601 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of x2_quest2knows
@@ -8331,7 +8331,7 @@ CREATE TABLE `x2_questionanalysis`  (
   INDEX `qabasicid`(`qabasicid`) USING BTREE,
   INDEX `qaquestionid`(`qaquestionid`) USING BTREE,
   INDEX `qauserid`(`qauserid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = FIXED;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of x2_questionanalysis
@@ -11866,7 +11866,7 @@ CREATE TABLE `x2_record`  (
   INDEX `recordquestionid`(`recordquestionid`) USING BTREE,
   INDEX `recorduserid`(`recorduserid`) USING BTREE,
   INDEX `recordsubjectid`(`recordsubjectid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 554 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = FIXED;
+) ENGINE = InnoDB AUTO_INCREMENT = 554 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of x2_record
