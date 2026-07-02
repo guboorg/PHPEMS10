@@ -72,6 +72,10 @@ class action extends app
 			$question = $this->ev->get('question');
             $sessionvars['examsessionuseranswer'] = $question;
 			$result = $this->exam->markscore($sessionvars,$questype);
+			if($result['wrongids'] && $this->setting['autorecord'])
+			{
+				$this->favor->addRecords($this->_user['sessionuserid'],$result['wrongids'],$this->data['currentbasic']['basicsubjectid']);
+			}
 			if($result['needhand'])
 			{
 				$message = array(
