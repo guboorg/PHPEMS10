@@ -447,19 +447,25 @@ class question_exam
 		$questions = array();
 		$questionrows = array();
 		$tmp = array();
+		$data = is_array($data)?$data:array();
+		$knows = is_array($knows)?$knows:array();
+		$qt = is_array($qt)?$qt:array();
 		foreach($knows as $ps)
 		{
+			if(!is_array($ps))continue;
 			foreach($ps as $p)
 			{
 				if(isset($data[$p]) && is_array($data[$p]))
 				{
 					foreach($data[$p] as $key => $qs)
 					{
-						foreach($qs['question'] as $qid)
+						$qsquestions = isset($qs['question']) && is_array($qs['question'])?$qs['question']:array();
+						$qsquestionrows = isset($qs['questionrows']) && is_array($qs['questionrows'])?$qs['questionrows']:array();
+						foreach($qsquestions as $qid)
 						{
 							$tmp[$key]['question'][$qid] = $qid;
 						}
-						foreach($qs['questionrows'] as $qrid)
+						foreach($qsquestionrows as $qrid)
 						{
 							$tmp[$key]['questionrows'][$qrid] = $qrid;
 						}
@@ -507,16 +513,18 @@ class question_exam
 						}
 						$t -= $tmpnumber;
 					}
-					while($t)
+					while($t && count($ids['questionrows']))
 					{
 						$qrid = array_rand($ids['questionrows'],1);
+						$qr = array();
 						if($qrid)
 						{
 							$qr = $this->exam->getQuestionRowsByArgs(array(array("AND","qrid = :qrid",'qrid',$qrid)));
 							$questionrows[$key][] = $qrid;
 							unset($ids['questionrows'][$qrid]);
 						}
-						if($qr['qrnumber'] < 1)$qr['qrnumber'] = 1;
+						$qr = is_array($qr)?$qr:array();
+						if(!isset($qr['qrnumber']) || $qr['qrnumber'] < 1)$qr['qrnumber'] = 1;
 						$t = intval($t - $qr['qrnumber']);
 					}
 				}
