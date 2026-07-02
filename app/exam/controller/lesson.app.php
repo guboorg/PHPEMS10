@@ -76,8 +76,7 @@ class action extends app
 				if($exer['exernumber'])$number = $exer['exernumber'];
 				else $number = 1;
             }
-            else
-			$args = array('exeruserid' => $this->_user['sessionuserid'],'exerbasicid' => $this->data['currentbasic']['basicid'],'exerknowsid' => $knowsid,'exernumber' => $number,'exerqutype' => $questid);
+            $args = array('exeruserid' => $this->_user['sessionuserid'],'exerbasicid' => $this->data['currentbasic']['basicid'],'exerknowsid' => $knowsid,'exernumber' => $number,'exerqutype' => intval($questid));
             $this->exer->setExercise($args);
             $knows = $this->section->getQuestionsByKnows($knowsid);
 			if($questid)
