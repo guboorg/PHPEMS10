@@ -38,6 +38,10 @@ class exercise_exam
 
 	public function setExercise($args)
 	{
+		foreach(array('exeruserid','exerbasicid','exerknowsid','exernumber','exerqutype') as $field)
+		{
+			if(isset($args[$field]))$args[$field] = intval($args[$field]);
+		}
 		$userid = $args['exeruserid'];
 		$basicid = $args['exerbasicid'];
         $knowsid = $args['exerknowsid'];
