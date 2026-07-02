@@ -333,7 +333,7 @@ class action extends app
 					$ids = "";
 					if(is_array($p))
 					{
-						if(count($p))
+						if(is_array($p) && count($p))
 						{
 							foreach($p as $t)
 							{

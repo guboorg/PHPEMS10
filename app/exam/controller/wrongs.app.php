@@ -81,6 +81,7 @@ class action extends app
 					$sessionvars['examsessionscorelist'][$key] = $p;
 				}
 			}
+			$sessionvars['examsessionscorelist'] = isset($sessionvars['examsessionscorelist']) && is_array($sessionvars['examsessionscorelist'])?$sessionvars['examsessionscorelist']:array();
 			foreach($sessionvars['examsessionscorelist'] as $p)
 			{
 				$sumscore = $sumscore + floatval($p);
@@ -543,7 +544,7 @@ class action extends app
 				foreach($questionids['question'] as $key => $p)
 				{
 					$ids = "";
-					if(count($p))
+					if(is_array($p) && count($p))
 					{
 						foreach($p as $t)
 						{
@@ -559,7 +560,7 @@ class action extends app
 					$ids = "";
 					if(is_array($p))
 					{
-						if(count($p))
+						if(is_array($p) && count($p))
 						{
 							foreach($p as $t)
 							{

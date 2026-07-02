@@ -105,7 +105,7 @@ class action extends app
         foreach($questionids['question'] as $key => $p)
         {
             $ids = "";
-            if(count($p))
+            if(is_array($p) && count($p))
             {
                 foreach($p as $t)
                 {
@@ -121,7 +121,7 @@ class action extends app
             $ids = "";
             if(is_array($p))
             {
-                if(count($p))
+                if(is_array($p) && count($p))
                 {
                     foreach($p as $t)
                     {
@@ -166,7 +166,7 @@ class action extends app
         {
             foreach($ps as $p)
             {
-                if($data['rddata'][$p])
+                if(isset($data['rddata'][$p]) && is_array($data['rddata'][$p]))
                 {
                     foreach($data['rddata'][$p] as $key => $qs)
                     {
@@ -186,11 +186,13 @@ class action extends app
         foreach ($questype as $key => $type)
         {
             $number = 0;
-            if(count($tmp[$key]['questionrows']))
+            $questionrows = isset($tmp[$key]['questionrows']) && is_array($tmp[$key]['questionrows'])?$tmp[$key]['questionrows']:array();
+            $questions = isset($tmp[$key]['question']) && is_array($tmp[$key]['question'])?$tmp[$key]['question']:array();
+            if(count($questionrows))
             {
-                $number += $this->exam->getQuestionrowsSumNumber($tmp[$key]['questionrows']);
+                $number += $this->exam->getQuestionrowsSumNumber($questionrows);
             }
-            $number += count($tmp[$key]['question']);
+            $number += count($questions);
             $questype[$key]['number'] = $number;
         }
         $this->tpl->assign('questype',$questype);
