@@ -206,7 +206,7 @@ class action extends app
 		}
 		$args['examsessionuseranswer'] = $question;
 		$args['examsessionscorelist'] = $scorelist;
-		$args['examsessionscore'] = array_sum($scorelist);
+		$args['examsessionscore'] = array_sum(array_filter($scorelist,'is_numeric'));
 		$this->exam->modifyExamSession($args,$sessionid);
 		$this->favor->addExamHistory($sessionid);
 		$message = array(

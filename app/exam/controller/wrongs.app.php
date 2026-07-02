@@ -8,6 +8,11 @@
  */
 class action extends app
 {
+	private function normalizeScore($score)
+	{
+		return is_numeric($score)?$score + 0:0;
+	}
+
 	public function display()
 	{
 		$action = $this->ev->url(3);
@@ -155,7 +160,7 @@ class action extends app
 							$right[$key]++;
 							$allright++;
 						}
-						$score[$key] = $score[$key]+$sessionvars['examsessionscorelist'][$p['questionid']];
+						$score[$key] += $this->normalizeScore($sessionvars['examsessionscorelist'][$p['questionid']]);
 					}
 				}
 				if($sessionvars['examsessionquestion']['questionrows'][$key])
@@ -171,7 +176,7 @@ class action extends app
 								$right[$key]++;
 								$allright++;
 							}
-							$score[$key] = $score[$key]+$sessionvars['examsessionscorelist'][$p['questionid']];
+							$score[$key] += $this->normalizeScore($sessionvars['examsessionscorelist'][$p['questionid']]);
 						}
 					}
 				}
@@ -186,7 +191,7 @@ class action extends app
                         $stats[$knows['knowsid']]['knowsid'] = $knows['knowsid'];
                         $stats[$knows['knowsid']]['knows'] = $knows['knows'];
                         $stats[$knows['knowsid']]['number'] = intval($stats[$knows['knowsid']]['number']) + 1;
-                        if($eh['ehscorelist'][$question['questionid']] > 0)
+                        if($this->normalizeScore($eh['ehscorelist'][$question['questionid']]) > 0)
 						$stats[$knows['knowsid']]['right'] = intval($stats[$knows['knowsid']]['right']) + 1;
                     }
                 }
@@ -203,7 +208,7 @@ class action extends app
                             $stats[$knows['knowsid']]['knowsid'] = $knows['knowsid'];
                             $stats[$knows['knowsid']]['knows'] = $knows['knows'];
                             $stats[$knows['knowsid']]['number'] = intval($stats[$knows['knowsid']]['number']) + 1;
-                            if($eh['ehscorelist'][$question['questionid']] > 0)
+                            if($this->normalizeScore($eh['ehscorelist'][$question['questionid']]) > 0)
 							$stats[$knows['knowsid']]['right'] = intval($stats[$knows['knowsid']]['right']) + 1;
                         }
                     }
@@ -386,7 +391,7 @@ class action extends app
 			if(!$needhand)
 			{
 				$args['examsessionstatus'] = 2;
-				$args['examsessionscore'] = array_sum($scorelist);
+				$args['examsessionscore'] = array_sum(array_filter($scorelist,'is_numeric'));
 				$this->exam->modifyExamSession($args);
 				$message = array(
 					'statusCode' => 200,
