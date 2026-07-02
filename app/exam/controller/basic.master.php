@@ -8,6 +8,11 @@
  */
 class action extends app
 {
+	private function normalizeScore($score)
+	{
+		return is_numeric($score)?$score + 0:0;
+	}
+
 	public function display()
 	{
 		$action = $this->ev->url(3);
@@ -331,7 +336,7 @@ class action extends app
 							{
 								$right[$key]++;
 							}
-							$allscore[$key] += $sessionvars['ehsetting']['examsetting']['scores'];
+							$allscore[$key] += $this->normalizeScore($sessionvars['ehsetting']['examsetting']['scores'][$p['questionid']]);
 						}
 						else
 						{
@@ -341,13 +346,13 @@ class action extends app
 							}
 							$allscore[$key] += $sessionvars['ehsetting']['examsetting']['questype'][$key]['score'];
 						}
-						$score[$key] = $score[$key] + $sessionvars['ehscorelist'][$p['questionid']];
+						$score[$key] += $this->normalizeScore($sessionvars['ehscorelist'][$p['questionid']]);
 						foreach ($p['questionknowsid'] as $knows)
 						{
 							$stats[$knows['knowsid']]['knowsid'] = $knows['knowsid'];
 							$stats[$knows['knowsid']]['knows'] = $knows['knows'];
 							$stats[$knows['knowsid']]['number'] = intval($stats[$knows['knowsid']]['number']) + 1;
-							if ($sessionvars['ehscorelist'][$p['questionid']] > 0)
+							if ($this->normalizeScore($sessionvars['ehscorelist'][$p['questionid']]) > 0)
 							{
 								$stats[$knows['knowsid']]['right'] = intval($stats[$knows['knowsid']]['right']) + 1;
 							}
@@ -375,13 +380,13 @@ class action extends app
 									$right[$key]++;
 								}
 							}
-							$score[$key] = $score[$key] + $sessionvars['ehscorelist'][$p['questionid']];
+							$score[$key] += $this->normalizeScore($sessionvars['ehscorelist'][$p['questionid']]);
 							foreach ($v['qrknowsid'] as $knows)
 							{
 								$stats[$knows['knowsid']]['knowsid'] = $knows['knowsid'];
 								$stats[$knows['knowsid']]['knows'] = $knows['knows'];
 								$stats[$knows['knowsid']]['number'] = intval($stats[$knows['knowsid']]['number']) + 1;
-								if ($sessionvars['ehscorelist'][$p['questionid']] > 0)
+								if ($this->normalizeScore($sessionvars['ehscorelist'][$p['questionid']]) > 0)
 								{
 									$stats[$knows['knowsid']]['right'] = intval($stats[$knows['knowsid']]['right']) + 1;
 								}

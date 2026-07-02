@@ -1017,7 +1017,7 @@ class exam_exam
             }
         }
         $sessionvars['examsessionscorelist'] = $scorelist;
-        $sessionvars['examsessionscore'] = array_sum($scorelist);
+        $sessionvars['examsessionscore'] = array_sum(array_filter($scorelist,'is_numeric'));
         $sessionvars['batch'] = $batch;
         if($needhand)$ehid = $this->favor->addExamHistory($sessionvars,0);
         else $ehid = $this->favor->addExamHistory($sessionvars);
