@@ -181,6 +181,7 @@ class pdosql
 	private function _makeDefaultInsertArgs($tables,$args)
 	{
 		$newargs = array();
+		$args = is_array($args)?$args:array();
 		if(!is_array($tables))
 		{
 			$tables = array($tables);
@@ -193,16 +194,16 @@ class pdosql
 			{
 				if($p['Extra'] != 'auto_increment')
 				{
-					if($args[$p['Field']])$newargs[$p['Field']] = $args[$p['Field']];
-					else
+					$field = $p['Field'];
+					if(array_key_exists($field,$args))
 					{
-						if(array_key_exists($p['Field'],$args))
-						{
-							$newargs[$p['Field']] = $this->_setDefaultInsetValue($p['Type']);
-						}
+						if($args[$field] === '' || $args[$field] === null)
+						$newargs[$field] = $this->_setDefaultInsetValue($p['Type']);
 						else
-						$newargs[$p['Field']] = $this->_setDefaultInsetValue($p['Type'],$p['Default']);
+						$newargs[$field] = $args[$field];
 					}
+					else
+					$newargs[$field] = $this->_setDefaultInsetValue($p['Type'],$p['Default']);
 				}
 			}
 		}
@@ -212,6 +213,7 @@ class pdosql
 	private function _makeDefaultUpdateArgs($tables,$args)
 	{
 		$newargs = array();
+		$args = is_array($args)?$args:array();
 		if(!is_array($tables))
 		{
 			$tables = array($tables);
@@ -224,11 +226,13 @@ class pdosql
 			{
 				if($p['Extra'] != 'auto_increment')
 				{
-					if(array_key_exists($p['Field'],$args))
+					$field = $p['Field'];
+					if(array_key_exists($field,$args))
 					{
-						if($args[$p['Field']])$newargs[$p['Field']] = $args[$p['Field']];
+						if($args[$field] === '' || $args[$field] === null)
+						$newargs[$field] = $this->_setDefaultInsetValue($p['Type']);
 						else
-						$newargs[$p['Field']] = $this->_setDefaultInsetValue($p['Type']);
+						$newargs[$field] = $args[$field];
 					}
 				}
 			}
