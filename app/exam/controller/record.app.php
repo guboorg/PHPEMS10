@@ -75,7 +75,8 @@ class action extends app
             \PHPEMS\ginkgo::R($message);
         }
         $data = $this->favor->getRecordDataByUseridAndSubjectid($this->_user['sessionuserid'],$this->data['currentbasic']['basicsubjectid']);
-        $questionids = $this->question->selectRecords($args['number'],$data['rddata'],$this->data['currentbasic']['basicknows']);
+        $rddata = isset($data['rddata']) && is_array($data['rddata'])?$data['rddata']:array();
+        $questionids = $this->question->selectRecords($args['number'],$rddata,$this->data['currentbasic']['basicknows']);
         $questions = array();
         $questionrows = array();
         foreach($questionids['question'] as $key => $p)
@@ -138,19 +139,24 @@ class action extends app
     {
         $data = $this->favor->getRecordDataByUseridAndSubjectid($this->_user['sessionuserid'],$this->data['currentbasic']['basicsubjectid']);
         $tmp = array();
-        foreach($this->data['currentbasic']['basicknows'] as $ps)
+        $rddata = isset($data['rddata']) && is_array($data['rddata'])?$data['rddata']:array();
+        $basicknows = isset($this->data['currentbasic']['basicknows']) && is_array($this->data['currentbasic']['basicknows'])?$this->data['currentbasic']['basicknows']:array();
+        foreach($basicknows as $ps)
         {
+            if(!is_array($ps))continue;
             foreach($ps as $p)
             {
-                if(isset($data['rddata'][$p]) && is_array($data['rddata'][$p]))
+                if(isset($rddata[$p]) && is_array($rddata[$p]))
                 {
-                    foreach($data['rddata'][$p] as $key => $qs)
+                    foreach($rddata[$p] as $key => $qs)
                     {
-                        foreach($qs['question'] as $qid)
+                        $qsquestions = isset($qs['question']) && is_array($qs['question'])?$qs['question']:array();
+                        $qsquestionrows = isset($qs['questionrows']) && is_array($qs['questionrows'])?$qs['questionrows']:array();
+                        foreach($qsquestions as $qid)
                         {
                             $tmp[$key]['question'][] = $qid;
                         }
-                        foreach($qs['questionrows'] as $qrid)
+                        foreach($qsquestionrows as $qrid)
                         {
                             $tmp[$key]['questionrows'][] = $qrid;
                         }
@@ -186,7 +192,8 @@ class action extends app
         $args[] = array("AND","questionstatus = 1");
         $questions = $this->favor->getRecordList($args,$page);
         $parents = array();
-        foreach($questions as $question)
+        $questionlist = isset($questions['data']) && is_array($questions['data'])?$questions['data']:array();
+        foreach($questionlist as $question)
         {
             if($question['questionparent'])
             {
