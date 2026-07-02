@@ -451,7 +451,7 @@ class question_exam
 		{
 			foreach($ps as $p)
 			{
-				if($data[$p])
+				if(isset($data[$p]) && is_array($data[$p]))
 				{
 					foreach($data[$p] as $key => $qs)
 					{
@@ -470,7 +470,9 @@ class question_exam
 		$data = $tmp;
 		foreach($qt as $key => $t)
 		{
-			$ids = $data[$key];
+			$ids = isset($data[$key]) && is_array($data[$key])?$data[$key]:array();
+			$ids['questionrows'] = isset($ids['questionrows']) && is_array($ids['questionrows'])?$ids['questionrows']:array();
+			$ids['question'] = isset($ids['question']) && is_array($ids['question'])?$ids['question']:array();
 			if(count($ids['questionrows']))
 			{
 				$qrid = array_rand($ids['questionrows'],1);

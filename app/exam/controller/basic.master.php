@@ -301,9 +301,9 @@ class action extends app
 			$charts['time'][] = date('Y-m-d H:i',$r['ehstarttime']);
 			$charts['score'][] = $r['ehscore'];
 		}
-		$charts['time'] = array_reverse($charts['time']);
-		$charts['score'] = array_reverse($charts['score']);
-		$avg = array_sum($charts['score'])/count($charts['score']);
+		$charts['time'] = isset($charts['time']) && is_array($charts['time'])?array_reverse($charts['time']):array();
+		$charts['score'] = isset($charts['score']) && is_array($charts['score'])?array_reverse($charts['score']):array();
+		$avg = count($charts['score'])?array_sum($charts['score'])/count($charts['score']):0;
 		$questypes = $this->basic->getQuestypeList();
 		$number = array();
 		$right = array();
