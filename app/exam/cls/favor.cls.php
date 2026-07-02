@@ -113,9 +113,10 @@ class favor_exam
 
 	public function addRecords($userid,$ids,$subjectid)
 	{
+		$changed = false;
 		foreach($ids as $id)
 		{
-			if(!$this->getRecordByQuestionAndUserId($id,$userid))
+			if(!$this->getRecordByQuestionAndUserId($id,$userid,$subjectid))
 			{
 				$args = array(
 					'recordquestionid' => $id,
@@ -123,15 +124,28 @@ class favor_exam
 					'recordsubjectid' => $subjectid
 				);
 				$this->addRecord($args);
+				$changed = true;
 			}
+		}
+		if($changed)
+		{
+			$this->setRecordData($userid,$subjectid);
 		}
 		return true;
 	}
 
 	//根据用户ID和试题ID获取试题是否被收入错题库
-	public function getRecordByQuestionAndUserId($id,$userid)
+	public function getRecordByQuestionAndUserId($id,$userid,$subjectid = 0)
 	{
-		$data = array(false,'record',array(array("AND","recordquestionid = :recordquestionid",'recordquestionid',$id),array("AND","recorduserid = :recorduserid",'recorduserid',$userid)));
+		$args = array(
+			array("AND","recordquestionid = :recordquestionid",'recordquestionid',$id),
+			array("AND","recorduserid = :recorduserid",'recorduserid',$userid)
+		);
+		if($subjectid)
+		{
+			$args[] = array("AND","recordsubjectid = :recordsubjectid",'recordsubjectid',$subjectid);
+		}
+		$data = array(false,'record',$args);
 		$sql = $this->pdosql->makeSelect($data);
 		return $this->db->fetch($sql,'recordquestion');
 	}
