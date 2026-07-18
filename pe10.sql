@@ -155,7 +155,7 @@ CREATE TABLE `x2_attach`  (
   `attsize` int(11) NOT NULL DEFAULT 0,
   `attmd5` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `attuserid` int(11) NOT NULL DEFAULT 0,
-  `attcntype` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `attcntype` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`attid`) USING BTREE,
   INDEX `attext`(`attext`, `attinputtime`) USING BTREE,
   INDEX `attuserid`(`attuserid`) USING BTREE,

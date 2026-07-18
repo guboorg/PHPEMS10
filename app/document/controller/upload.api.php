@@ -50,7 +50,7 @@ class action extends app
 			$args['atttitle'] = $upfile['name'];
 			$args['attsize'] = $upfile['size'];
 			$args['attuserid'] = $this->_user['sessionuserid'];
-			$args['attcntype'] = $upfile['type'];
+			$args['attcntype'] = substr($upfile['type'],0,12);
 			$this->attach->addAttach($args);
 			$back = array(
 				'fileName' => $upfile['name'],

@@ -45,8 +45,16 @@ class action extends app
 		if($this->ev->get('insertquestion'))
 		{
 			$page = $this->ev->get('page');
-			$uploadfile = $this->ev->get('uploadfile');
+			$uploadfile = trim($this->ev->get('uploadfile'));
 			$knowsid = trim($this->ev->get('knowsid'));
+			if(!$uploadfile || !is_file($uploadfile))
+			{
+				$message = array(
+					'statusCode' => 300,
+					"message" => "请先上传有效的CSV文件"
+				);
+				\PHPEMS\ginkgo::R($message);
+			}
 			$this->exam->importQuestionBat($uploadfile,$knowsid);
 			$message = array(
 				'statusCode' => 200,
