@@ -1,0 +1,15 @@
+1,Single choice with 2 options,"<p>A:1</p><p>B:2</p>",2,A,Answer is A,1,1,0,0
+1,Single choice with 3 options,"<p>A:1</p><p>B:2</p><p>C:3</p>",3,B,Answer is B,1,2,0,0
+1,Single choice with 4 options,"<p>A:1</p><p>B:2</p><p>C:3</p><p>D:4</p>",4,C,Answer is C,1,3,0,0
+1,Single choice with 5 options,"<p>A:1</p><p>B:2</p><p>C:3</p><p>D:4</p><p>E:5</p>",5,D,Answer is D,1,1,0,0
+1,Single choice with 6 options,"<p>A:1</p><p>B:2</p><p>C:3</p><p>D:4</p><p>E:5</p><p>F:6</p>",6,E,Answer is E,1,2,0,0
+1,Single choice with 7 options,"<p>A:1</p><p>B:2</p><p>C:3</p><p>D:4</p><p>E:5</p><p>F:6</p><p>G:7</p>",7,F,Answer is F,1,3,0,0
+1,Single choice with 8 options,"<p>A:1</p><p>B:2</p><p>C:3</p><p>D:4</p><p>E:5</p><p>F:6</p><p>G:7</p><p>H:8</p>",8,G,Answer is G,1,1,0,0
+2,Multiple choice with 4 options,"<p>A:1</p><p>B:2</p><p>C:3</p><p>D:4</p>",4,"A,B",Answers are A and B,1,2,0,0
+3,Judgement true or false,"<p>A:True</p><p>B:False</p>",2,A,Answer is true,1,1,0,0
+4,Fixed-value blank: spell PHP,,0,PHP,Only exact value PHP is correct,1,2,0,0
+5,Subjective blank question,,0,PHP Hypertext Preprocessor,Manual or text answer example,1,2,0,0
+6,Essay question,,0,Reference answer for essay,Manual scoring essay example,1,3,0,0
+7,Passage title for grouped questions,,0,,Passage stem/title row,1,2,1,1
+1,Grouped single choice child,"<p>A:1</p><p>B:2</p><p>C:3</p><p>D:4</p>",4,A,Child question answer A,1,1,1,0
+2,Grouped multiple choice child,"<p>A:1</p><p>B:2</p><p>C:3</p><p>D:4</p>",4,"A,C",Child question answers A and C,1,2,1,0
