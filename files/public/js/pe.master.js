@@ -784,7 +784,10 @@ function inituploader()
 	    'template': petemplate,
 	    'request': {
 	        'endpoint': 'index.php?document-api-fineuploader',
-	        'method': 'POST'
+	        'method': 'POST',
+	        'params': {
+	        	'uploadtype': petype
+	        }
 	    },
 	    'thumbnails': {
 	        'placeholders': {

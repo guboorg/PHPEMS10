@@ -40,7 +40,7 @@ class action extends app
 
 			$args['attsize'] = $upfile['size'];
 			$args['attuserid'] = $this->_user['sessionuserid'];
-			$args['attcntype'] = substr($upfile['type'],0,12);
+			$args['attcntype'] = strlen($upfile['type']) > 10 ? strtolower($args['attext']) : $upfile['type'];
 			$this->attach->addAttach($args);
 			if($this->ev->get('imgwidth') || $this->ev->get('imgheight'))
 			{
@@ -51,8 +51,8 @@ class action extends app
 			}
 			else
 			$thumb = $fileurl;
-			if($osspath)
-			exit(json_encode(array('success' => true,'thumb' => $osspath,'title' => $upfile['name'])));
+			if($osspath && $this->ev->get('uploadtype') != 'files')
+			exit(json_encode(array('success' => true,'thumb' => $osspath,'local' => $thumb,'title' => $upfile['name'])));
 			else
 			exit(json_encode(array('success' => true,'thumb' => $thumb,'title' => $upfile['name'])));
 		}
