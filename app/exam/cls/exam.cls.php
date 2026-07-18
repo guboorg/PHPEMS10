@@ -283,13 +283,43 @@ class exam_exam
 		return $r;
 	}
 
+	public function resolveImportCsvFile($uploadfile)
+	{
+		$uploadfile = trim(urldecode(str_ireplace(array('http://','https://'),'',$uploadfile)));
+		if(!$uploadfile)return false;
+		if(preg_match('/^\/\//',$uploadfile))
+		{
+			$parts = explode('/',$uploadfile,4);
+			$uploadfile = isset($parts[3]) ? $parts[3] : '';
+		}
+		$uploadfile = str_replace('\\','/',$uploadfile);
+		if(strpos($uploadfile,'?') !== false)$uploadfile = strstr($uploadfile,'?',true);
+		if(strpos($uploadfile,'#') !== false)$uploadfile = strstr($uploadfile,'#',true);
+		if(strpos($uploadfile,'../') !== false)return false;
+		$ext = strtolower(pathinfo($uploadfile,PATHINFO_EXTENSION));
+		if($ext != 'csv')return false;
+		$candidates = array($uploadfile);
+		if(substr($uploadfile,0,1) == '/')
+		{
+			$candidates[] = ltrim($uploadfile,'/');
+			if(isset($_SERVER['DOCUMENT_ROOT']) && $_SERVER['DOCUMENT_ROOT'])
+			$candidates[] = rtrim($_SERVER['DOCUMENT_ROOT'],'/').$uploadfile;
+		}
+		foreach($candidates as $candidate)
+		{
+			if($candidate && is_file($candidate) && is_readable($candidate))return $candidate;
+		}
+		return false;
+	}
+
 	public function importQuestionBat($uploadfile,$tknowsid,$questionparent = 0)
 	{
 		$this->session = \PHPEMS\ginkgo::make('session');
         $this->_user = $this->session->getSessionUser();
         $userid = $this->_user['sessionuserid'];
         $username = $this->_user['sessionusername'];
-	    if(!$uploadfile || !is_file($uploadfile))
+	    $uploadfile = $this->resolveImportCsvFile($uploadfile);
+	    if(!$uploadfile)
 	    {
 	    	return false;
 	    }

@@ -46,8 +46,9 @@ class action extends app
 		{
 			$page = $this->ev->get('page');
 			$uploadfile = trim($this->ev->get('uploadfile'));
+			$uploadfile = $this->exam->resolveImportCsvFile($uploadfile);
 			$knowsid = trim($this->ev->get('knowsid'));
-			if(!$uploadfile || !is_file($uploadfile))
+			if(!$uploadfile)
 			{
 				$message = array(
 					'statusCode' => 300,
