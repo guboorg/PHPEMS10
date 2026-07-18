@@ -2,8 +2,6 @@
 
 namespace PHPEMS;
 
-ini_set("display_errors","on");
-error_reporting(E_ERROR || E_PARSE);
 
 class ginkgo
 {
@@ -22,6 +20,7 @@ class ginkgo
     static function loadMoudle()
     {
         include PEPATH.'/lib/config.inc.php';
+        self::configureErrorReporting();
         header('P3P: CP=CAO PSA OUR');
         header('Content-Type: text/html; charset='.HE);
         ini_set('date.timezone','Asia/Shanghai');
@@ -33,6 +32,28 @@ class ginkgo
         }
     }
 	
+    /**
+     * Configure PHP error reporting from DEBUG in lib/config.inc.php.
+     */
+    static function configureErrorReporting()
+    {
+        $debug = defined('DEBUG') && DEBUG;
+        if ($debug)
+        {
+            error_reporting(E_ALL);
+            ini_set('display_errors', '1');
+            ini_set('display_startup_errors', '1');
+            ini_set('log_errors', '1');
+            ini_set('error_log', PEPATH.'/data/php_errors.log');
+        }
+        else
+        {
+            error_reporting(E_ERROR | E_PARSE);
+            ini_set('display_errors', '0');
+            ini_set('display_startup_errors', '0');
+        }
+    }
+
     /**
      * @param $G
      * @param null $app
