@@ -61,12 +61,136 @@ class action extends app
 				'statusCode' => 200,
 				"message" => "操作成功",
 				"callbackType" => "forward",
-			    "forwardUrl" => "index.php?exam-master-questions&page={$page}{$u}"
+			    "forwardUrl" => "index.php?exam-master-questions&page={$page}{$this->u}"
 			);
 			\PHPEMS\ginkgo::R($message);
 		}
 		else
 		$this->tpl->display('question_filebatadd');
+	}
+
+	private function deepseekimport()
+	{
+		if($this->ev->get('importquestion'))
+		{
+			$page = $this->ev->get('page');
+			$apiKey = trim($this->ev->get('api_key'));
+			$model = trim($this->ev->get('model'));
+			$prompt = trim($this->ev->get('prompt'));
+			$knowsid = trim($this->ev->get('knowsid'));
+			$count = intval($this->ev->get('count'));
+			$questiontype = intval($this->ev->get('questiontype'));
+			$questionlevel = intval($this->ev->get('questionlevel'));
+			$maxTokens = intval($this->ev->get('max_tokens'));
+			if(!$model)$model = 'deepseek-v4-flash';
+			if($count <= 0)$count = 5;
+			if($maxTokens <= 0)$maxTokens = 4096;
+			if(!$apiKey || !$prompt)
+			{
+				$message = array('statusCode' => 300,"message" => "请填写 DeepSeek API Key 和生成要求");
+				\PHPEMS\ginkgo::R($message);
+			}
+			$systemPrompt = '你是 PHPEMS 试题生成助手。请严格输出 json 对象，不要输出 Markdown。json 格式：{"questions":[{"type":1,"question":"题干","options":["A. 选项","B. 选项"],"select_number":4,"answer":"A","analysis":"答案解析","level":1,"knowsid":"1,2"}]}。type 为题型ID，level 为1到5整数，options 可为空数组。';
+			$userPrompt = "请根据以下要求生成 {$count} 道试题，必须包含题目选项、题目难易度、题型、答案和答案解析。默认题型ID：{$questiontype}，默认难度：{$questionlevel}，默认知识点ID：{$knowsid}。请返回 json。\n\n".$prompt;
+			if(!function_exists('curl_init'))
+			{
+				$message = array('statusCode' => 300,"message" => "服务器未启用 PHP curl 扩展，无法调用 DeepSeek API");
+				\PHPEMS\ginkgo::R($message);
+			}
+			$payload = array(
+				'model' => $model,
+				'messages' => array(
+					array('role' => 'system','content' => $systemPrompt),
+					array('role' => 'user','content' => $userPrompt)
+				),
+				'response_format' => array('type' => 'json_object'),
+				'max_tokens' => $maxTokens,
+				'temperature' => 0.7
+			);
+			$ch = curl_init('https://api.deepseek.com/chat/completions');
+			curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+			curl_setopt($ch,CURLOPT_POST,true);
+			curl_setopt($ch,CURLOPT_HTTPHEADER,array('Content-Type: application/json','Authorization: Bearer '.$apiKey));
+			curl_setopt($ch,CURLOPT_POSTFIELDS,json_encode($payload));
+			curl_setopt($ch,CURLOPT_TIMEOUT,120);
+			$response = curl_exec($ch);
+			$error = curl_error($ch);
+			$httpCode = curl_getinfo($ch,CURLINFO_HTTP_CODE);
+			curl_close($ch);
+			if($error || $httpCode < 200 || $httpCode >= 300)
+			{
+				$message = array('statusCode' => 300,"message" => "DeepSeek 调用失败：".($error?$error:$response));
+				\PHPEMS\ginkgo::R($message);
+			}
+			$result = json_decode($response,true);
+			if(!$result || !is_array($result))
+			{
+				$message = array('statusCode' => 300,"message" => "DeepSeek 返回内容不是有效 JSON");
+				\PHPEMS\ginkgo::R($message);
+			}
+			if(isset($result['error']['message']))
+			{
+				$message = array('statusCode' => 300,"message" => "DeepSeek 调用失败：".$result['error']['message']);
+				\PHPEMS\ginkgo::R($message);
+			}
+			$content = isset($result['choices'][0]['message']['content'])?$result['choices'][0]['message']['content']:'';
+			if(!$content)
+			{
+				$message = array('statusCode' => 300,"message" => "DeepSeek 未返回试题内容，请减少生成数量或提高最大输出 Token");
+				\PHPEMS\ginkgo::R($message);
+			}
+			$data = json_decode($content,true);
+			if(!$data || !is_array($data['questions']))
+			{
+				$message = array('statusCode' => 300,"message" => "DeepSeek 未返回有效的试题 json");
+				\PHPEMS\ginkgo::R($message);
+			}
+			$imported = 0;
+			foreach($data['questions'] as $question)
+			{
+				$args = array();
+				$options = isset($question['options'])?$question['options']:array();
+				$args['questiontype'] = isset($question['type']) && intval($question['type'])?intval($question['type']):$questiontype;
+				$args['question'] = $this->ev->addSlashes(htmlspecialchars(trim(isset($question['question'])?$question['question']:'')));
+				if(is_array($options))$args['questionselect'] = $this->ev->addSlashes(htmlspecialchars(implode("\n",$options)));
+				else $args['questionselect'] = $this->ev->addSlashes(htmlspecialchars(trim($options)));
+				$args['questionselectnumber'] = isset($question['select_number']) && intval($question['select_number'])?intval($question['select_number']):(is_array($options)?count($options):0);
+				$args['questionanswer'] = $this->ev->addSlashes(htmlspecialchars(trim(isset($question['answer'])?$question['answer']:'')));
+				$args['questiondescribe'] = $this->ev->addSlashes(htmlspecialchars(trim(isset($question['analysis'])?$question['analysis']:'')));
+				$args['questionlevel'] = isset($question['level']) && intval($question['level'])?intval($question['level']):$questionlevel;
+				$args['questioncreatetime'] = TIME;
+				$args['questionuserid'] = $this->_user['sessionuserid'];
+				$args['questionusername'] = $this->_user['sessionusername'];
+				$qknowsid = isset($question['knowsid']) && trim($question['knowsid'])?trim($question['knowsid']):$knowsid;
+				if($qknowsid)
+				{
+					$tmpkid = '0';
+					foreach(explode(',',$qknowsid) as $kid)
+					{
+						$kid = intval($kid);
+						if($kid)$tmpkid .= ','.$kid;
+					}
+					$knows = $this->section->getKnowsListByArgs(array(array("AND","find_in_set(knowsid,:knowsid)",'knowsid',$tmpkid)));
+					$args['questionknowsid'] = '';
+					foreach($knows as $p)$args['questionknowsid'] .= $p['knowsid'].':'.$p['knows']."\n";
+				}
+				if($args['question'])
+				{
+					$this->exam->addQuestions($args);
+					$imported++;
+				}
+			}
+			$message = array('statusCode' => 200,"message" => "DeepSeek 已生成并导入 {$imported} 道试题","callbackType" => "forward","forwardUrl" => "index.php?exam-master-questions&page={$page}{$this->u}");
+			\PHPEMS\ginkgo::R($message);
+		}
+		else
+		{
+			$questypes = $this->basic->getQuestypeList();
+			$subjects = $this->basic->getSubjectList();
+			$this->tpl->assign('questypes',$questypes);
+			$this->tpl->assign('subjects',$subjects);
+			$this->tpl->display('question_deepseekimport');
+		}
 	}
 
 	private function addquestion()
@@ -114,7 +238,7 @@ class action extends app
 				'statusCode' => 200,
 				"message" => "操作成功",
 				"callbackType" => "forward",
-			    "forwardUrl" => "index.php?exam-master-questions&page={$page}{$u}"
+			    "forwardUrl" => "index.php?exam-master-questions&page={$page}{$this->u}"
 			);
 			\PHPEMS\ginkgo::R($message);
 		}
@@ -145,7 +269,7 @@ class action extends app
 				'statusCode' => 200,
 				"message" => "操作成功",
 				"callbackType" => "forward",
-			    "forwardUrl" => "index.php?exam-master-questions&page={$page}{$u}"
+			    "forwardUrl" => "index.php?exam-master-questions&page={$page}{$this->u}"
 			);
 			\PHPEMS\ginkgo::R($message);
 		}
@@ -165,7 +289,7 @@ class action extends app
 			'statusCode' => 200,
 			"message" => "操作成功",
 			"callbackType" => "forward",
-		    "forwardUrl" => "index.php?exam-master-questions&page={$page}{$u}"
+		    "forwardUrl" => "index.php?exam-master-questions&page={$page}{$this->u}"
 		);
 		\PHPEMS\ginkgo::R($message);
 	}
@@ -180,7 +304,7 @@ class action extends app
 			'statusCode' => 200,
 			"message" => "操作成功",
 			"callbackType" => "forward",
-		    "forwardUrl" => "index.php?exam-master-questions&page={$page}{$u}"
+		    "forwardUrl" => "index.php?exam-master-questions&page={$page}{$this->u}"
 		);
 		\PHPEMS\ginkgo::R($message);
 	}
@@ -218,14 +342,14 @@ class action extends app
 				'statusCode' => 200,
 				"message" => "操作成功",
 				"callbackType" => "forward",
-				"forwardUrl" => "index.php?exam-master-questions&page={$page}{$u}"
+				"forwardUrl" => "index.php?exam-master-questions&page={$page}{$this->u}"
 			);
 			else
 			$message = array(
 				'statusCode' => 200,
 				"message" => "操作成功",
 				"callbackType" => "forward",
-			    "forwardUrl" => "index.php?exam-master-questions&page={$page}{$u}"
+			    "forwardUrl" => "index.php?exam-master-questions&page={$page}{$this->u}"
 			);
 			\PHPEMS\ginkgo::R($message);
 		}

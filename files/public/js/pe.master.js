@@ -21,15 +21,17 @@ jQuery.extend({'zoombox':(function(){
 				break;
 
 				case 'ajax':
-				var cnt = "<div class=\"modal-dialog\" role=\"document\" style=\"width:650px;\"><div class=\"modal-content\"><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">×</button><h5>出现错误</h5></div><div class=\"modal-body\"><p class=\"alert text-danger\">"+obj.message+"</p></div></div></div>";
-				var cnt = "<div class=\"modal-dialog\" role=\"document\" style=\"width:650px;margin-top:160px;\"><div class=\"modal-content\"><div class=\"modal-header\" style=\"border:0px;\"><h4 class=\"text-danger\"><em class=\"glyphicon glyphicon-remove-sign\" style=\"font-size:2em;vertical-align: middle;margin-left:25px;\"></em>&nbsp;&nbsp;"+$(obj).attr('message')+"<button type=\"button\" class=\"close pull-right\" data-dismiss=\"modal\" aria-hidden=\"true\" style=\"font-size:2em;\">×</button></h4></div><div class=\"modal-body hide\"><p class=\"alert text-danger\">"+$(obj).attr('message')+"</p></div></div></div>";
+				var ajaxMessage = obj.message?obj.message:$(obj).attr('message');
+				if(!ajaxMessage)ajaxMessage = '操作失败，请检查请求参数或服务器返回信息';
+				var cnt = "<div class=\"modal-dialog\" role=\"document\" style=\"width:650px;margin-top:160px;\"><div class=\"modal-content\"><div class=\"modal-header\" style=\"border:0px;\"><h4 class=\"text-danger\"><em class=\"glyphicon glyphicon-remove-sign\" style=\"font-size:2em;vertical-align: middle;margin-left:25px;\"></em>&nbsp;&nbsp;"+ajaxMessage+"<button type=\"button\" class=\"close pull-right\" data-dismiss=\"modal\" aria-hidden=\"true\" style=\"font-size:2em;\">×</button></h4></div><div class=\"modal-body hide\"><p class=\"alert text-danger\">"+ajaxMessage+"</p></div></div></div>";
 				m.html(cnt);
 				m.modal({'backdrop':false});
 				break;
 
 				case 'ajaxOK':
-				var cnt = "<div class=\"modal-dialog\" role=\"document\" style=\"width:650px;\"><div class=\"modal-content\"><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">×</button><h5>操作成功</h5></div><div class=\"modal-body\"><p class=\"alert text-success\">"+obj.message+"</p></div></div></div>";
-				var cnt = "<div class=\"modal-dialog\" role=\"document\" style=\"width:650px;margin-top:160px;\"\"><div class=\"modal-content\"><div class=\"modal-header\" style=\"border:0px;\"><h5 class=\"text-success\"><em class=\"glyphicon glyphicon-ok-sign\" style=\"font-size:2em;vertical-align: middle;margin-left:25px;\"></em>&nbsp;&nbsp;"+$(obj).attr('message')+"<button type=\"button\" class=\"close pull-right\" data-dismiss=\"modal\" aria-hidden=\"true\" style=\"font-size:2em;\">×</button></h5></div><div class=\"modal-body hide\"><p class=\"alert text-danger\">"+$(obj).attr('message')+"</p></div></div></div>";
+				var ajaxMessage = obj.message?obj.message:$(obj).attr('message');
+				if(!ajaxMessage)ajaxMessage = '操作成功';
+				var cnt = "<div class=\"modal-dialog\" role=\"document\" style=\"width:650px;margin-top:160px;\"><div class=\"modal-content\"><div class=\"modal-header\" style=\"border:0px;\"><h5 class=\"text-success\"><em class=\"glyphicon glyphicon-ok-sign\" style=\"font-size:2em;vertical-align: middle;margin-left:25px;\"></em>&nbsp;&nbsp;"+ajaxMessage+"<button type=\"button\" class=\"close pull-right\" data-dismiss=\"modal\" aria-hidden=\"true\" style=\"font-size:2em;\">×</button></h5></div><div class=\"modal-body hide\"><p class=\"alert text-danger\">"+ajaxMessage+"</p></div></div></div>";
 				m.html(cnt);
 				m.modal({'backdrop':false});
 				break;
