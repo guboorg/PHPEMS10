@@ -82,10 +82,31 @@ class action extends app
 		error_log('[DeepSeekImport] '.$message.($context?' '.json_encode($context,JSON_UNESCAPED_UNICODE):''));
 	}
 
-	private function deepseekImportFail($message,$context = array())
+	private function formatDeepseekImportMessage($message,$raw = '')
+	{
+		$raw = trim((string)$raw);
+		if(!$raw)return $message;
+
+		$decoded = json_decode($raw,true);
+		if(is_array($decoded))
+		{
+			if(isset($decoded['error']['message']) && $decoded['error']['message'])
+			{
+				$raw = $decoded['error']['message'];
+			}
+			else
+			{
+				$raw = json_encode($decoded,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+			}
+		}
+
+		return $message.'<br /><pre style="white-space:pre-wrap;word-break:break-all;margin-top:10px;max-height:360px;overflow:auto;text-align:left;">'.htmlspecialchars($raw,ENT_QUOTES,'UTF-8').'</pre>';
+	}
+
+	private function deepseekImportFail($message,$context = array(),$raw = '')
 	{
 		$this->logDeepseekImportError($message,$context);
-		\PHPEMS\ginkgo::R(array('statusCode' => 300,'message' => $message));
+		\PHPEMS\ginkgo::R(array('statusCode' => 300,'message' => $this->formatDeepseekImportMessage($message,$raw)));
 	}
 
 	private function deepseekimport()
@@ -137,22 +158,22 @@ class action extends app
 			curl_close($ch);
 			if($error || $httpCode < 200 || $httpCode >= 300)
 			{
-				$this->deepseekImportFail('DeepSeek 调用失败：'.($error?$error:$response),array('curl_errno' => $errno,'http_code' => $httpCode,'response' => $response));
+				$this->deepseekImportFail('DeepSeek 调用失败：HTTP 状态码 '.$httpCode,array('curl_errno' => $errno,'http_code' => $httpCode,'response' => $response),($error?$error:$response));
 			}
 			$result = json_decode($response,true);
 			if(!is_array($result))
 			{
-				$this->deepseekImportFail('DeepSeek 返回内容不是有效 JSON，请查看 data/deepseek_import_error.log',array('response' => $response));
+				$this->deepseekImportFail('DeepSeek 返回内容不是有效 JSON',array('response' => $response),$response);
 			}
 			$content = isset($result['choices'][0]['message']['content'])?$result['choices'][0]['message']['content']:'';
 			if(!$content)
 			{
-				$this->deepseekImportFail('DeepSeek 返回内容中缺少 choices[0].message.content，请查看 data/deepseek_import_error.log',array('response' => $response));
+				$this->deepseekImportFail('DeepSeek 返回内容中缺少 choices[0].message.content',array('response' => $response),$response);
 			}
 			$data = json_decode($content,true);
 			if(!$data || !isset($data['questions']) || !is_array($data['questions']))
 			{
-				$this->deepseekImportFail('DeepSeek 未返回有效的试题 json，请查看 data/deepseek_import_error.log',array('content' => $content));
+				$this->deepseekImportFail('DeepSeek 未返回有效的试题 json',array('content' => $content),$content);
 			}
 			$imported = 0;
 			foreach($data['questions'] as $question)
