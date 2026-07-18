@@ -60,7 +60,7 @@ index.php?exam-master-questions-deepseekimport
 | 字段 | 必填 | 说明 | 建议值 |
 | --- | --- | --- | --- |
 | API Key | 是 | DeepSeek API Key。提交后用于请求 API，不会被插件持久化保存。 | `sk-...` |
-| 模型 | 否 | DeepSeek 模型名。 | `deepseek-v4-flash` |
+| 模型 | 否 | DeepSeek 模型名。 | `deepseek-chat` |
 | 生成数量 | 否 | 本次希望生成的试题数量。 | 5 到 20 |
 | 最大输出 Token | 否 | 限制模型最多输出多少 token。题目越多、解析越长，需要越大。 | 4096 或更高 |
 | 默认题型 | 否 | 当 DeepSeek 返回题目未包含有效 `type` 时使用。 | 按题库题型选择 |
@@ -173,7 +173,18 @@ index.php?exam-master-questions-deepseekimport
 
 处理：补充 API Key 和明确的出题提示词后重新提交。
 
-### 8.2 提示「DeepSeek 调用失败」
+### 8.2 页面提示「操作失败，请检查请求参数或服务器返回信息」
+
+原因：这是前端没有解析到标准 JSON 响应时显示的兜底提示，通常表示后端发生了 PHP 致命错误、curl 扩展缺失、DeepSeek 响应结构异常，或服务器在 JSON 前输出了错误内容。
+
+处理：
+
+1. 先查看浏览器开发者工具 Network 中 `index.php?exam-master-questions-deepseekimport` 请求的 Response。
+2. 再查看服务器日志；本插件会把 DeepSeek 导入过程中的失败写入 `data/deepseek_import_error.log`，也会同步写入 PHP `error_log`。
+3. 如果日志中提示缺少 `curl_init`，请启用 PHP curl 扩展。
+4. 如果日志中包含 DeepSeek API 返回内容，请根据 HTTP 状态码、模型名、Key、余额或响应 JSON 结构修正后重试。
+
+### 8.3 提示「DeepSeek 调用失败」
 
 可能原因：
 
@@ -188,9 +199,9 @@ index.php?exam-master-questions-deepseekimport
 1. 在 DeepSeek Platform 检查 API Key 和余额。
 2. 使用服务器命令测试网络连通性。
 3. 检查 PHP curl 扩展。
-4. 将模型名改为当前可用模型，例如 `deepseek-v4-flash`。
+4. 将模型名改为当前可用模型，例如 `deepseek-chat`。
 
-### 8.3 提示「DeepSeek 未返回有效的试题 json」
+### 8.4 提示「DeepSeek 未返回有效的试题 json」
 
 原因：模型返回内容不是插件需要的 JSON 对象，或没有 `questions` 数组。
 
@@ -201,7 +212,7 @@ index.php?exam-master-questions-deepseekimport
 - 在提示词中强调「只返回 JSON，不要返回 Markdown」。
 - 明确写出 JSON 字段名和格式。
 
-### 8.4 导入后选项显示不符合预期
+### 8.5 导入后选项显示不符合预期
 
 原因：DeepSeek 返回的 `options` 字段不规范，或题型本身不需要选项。
 
@@ -210,7 +221,7 @@ index.php?exam-master-questions-deepseekimport
 - 单选、多选、判断题建议让模型返回数组格式选项。
 - 问答题、填空题建议让 `options` 返回空数组，`select_number` 返回 0。
 
-### 8.5 知识点没有关联成功
+### 8.6 知识点没有关联成功
 
 原因：`knowsid` 中的 ID 在 PHPEMS 中不存在，或使用了中文逗号、空格等不规范格式。
 
