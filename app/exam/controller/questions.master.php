@@ -92,11 +92,6 @@ class action extends app
 			}
 			$systemPrompt = '你是 PHPEMS 试题生成助手。请严格输出 json 对象，不要输出 Markdown。json 格式：{"questions":[{"type":1,"question":"题干","options":["A. 选项","B. 选项"],"select_number":4,"answer":"A","analysis":"答案解析","level":1,"knowsid":"1,2"}]}。type 为题型ID，level 为1到5整数，options 可为空数组。';
 			$userPrompt = "请根据以下要求生成 {$count} 道试题，必须包含题目选项、题目难易度、题型、答案和答案解析。默认题型ID：{$questiontype}，默认难度：{$questionlevel}，默认知识点ID：{$knowsid}。请返回 json。\n\n".$prompt;
-			if(!function_exists('curl_init'))
-			{
-				$message = array('statusCode' => 300,"message" => "服务器未启用 PHP curl 扩展，无法调用 DeepSeek API");
-				\PHPEMS\ginkgo::R($message);
-			}
 			$payload = array(
 				'model' => $model,
 				'messages' => array(
@@ -123,22 +118,7 @@ class action extends app
 				\PHPEMS\ginkgo::R($message);
 			}
 			$result = json_decode($response,true);
-			if(!$result || !is_array($result))
-			{
-				$message = array('statusCode' => 300,"message" => "DeepSeek 返回内容不是有效 JSON");
-				\PHPEMS\ginkgo::R($message);
-			}
-			if(isset($result['error']['message']))
-			{
-				$message = array('statusCode' => 300,"message" => "DeepSeek 调用失败：".$result['error']['message']);
-				\PHPEMS\ginkgo::R($message);
-			}
-			$content = isset($result['choices'][0]['message']['content'])?$result['choices'][0]['message']['content']:'';
-			if(!$content)
-			{
-				$message = array('statusCode' => 300,"message" => "DeepSeek 未返回试题内容，请减少生成数量或提高最大输出 Token");
-				\PHPEMS\ginkgo::R($message);
-			}
+			$content = $result['choices'][0]['message']['content'];
 			$data = json_decode($content,true);
 			if(!$data || !is_array($data['questions']))
 			{
@@ -149,19 +129,18 @@ class action extends app
 			foreach($data['questions'] as $question)
 			{
 				$args = array();
-				$options = isset($question['options'])?$question['options']:array();
-				$args['questiontype'] = isset($question['type']) && intval($question['type'])?intval($question['type']):$questiontype;
-				$args['question'] = $this->ev->addSlashes(htmlspecialchars(trim(isset($question['question'])?$question['question']:'')));
-				if(is_array($options))$args['questionselect'] = $this->ev->addSlashes(htmlspecialchars(implode("\n",$options)));
-				else $args['questionselect'] = $this->ev->addSlashes(htmlspecialchars(trim($options)));
-				$args['questionselectnumber'] = isset($question['select_number']) && intval($question['select_number'])?intval($question['select_number']):(is_array($options)?count($options):0);
-				$args['questionanswer'] = $this->ev->addSlashes(htmlspecialchars(trim(isset($question['answer'])?$question['answer']:'')));
-				$args['questiondescribe'] = $this->ev->addSlashes(htmlspecialchars(trim(isset($question['analysis'])?$question['analysis']:'')));
-				$args['questionlevel'] = isset($question['level']) && intval($question['level'])?intval($question['level']):$questionlevel;
+				$args['questiontype'] = intval($question['type'])?intval($question['type']):$questiontype;
+				$args['question'] = $this->ev->addSlashes(htmlspecialchars(trim($question['question'])));
+				if(is_array($question['options']))$args['questionselect'] = $this->ev->addSlashes(htmlspecialchars(implode("\n",$question['options'])));
+				else $args['questionselect'] = $this->ev->addSlashes(htmlspecialchars(trim($question['options'])));
+				$args['questionselectnumber'] = intval($question['select_number'])?intval($question['select_number']):(is_array($question['options'])?count($question['options']):0);
+				$args['questionanswer'] = $this->ev->addSlashes(htmlspecialchars(trim($question['answer'])));
+				$args['questiondescribe'] = $this->ev->addSlashes(htmlspecialchars(trim($question['analysis'])));
+				$args['questionlevel'] = intval($question['level'])?intval($question['level']):$questionlevel;
 				$args['questioncreatetime'] = TIME;
 				$args['questionuserid'] = $this->_user['sessionuserid'];
 				$args['questionusername'] = $this->_user['sessionusername'];
-				$qknowsid = isset($question['knowsid']) && trim($question['knowsid'])?trim($question['knowsid']):$knowsid;
+				$qknowsid = trim($question['knowsid'])?trim($question['knowsid']):$knowsid;
 				if($qknowsid)
 				{
 					$tmpkid = '0';
