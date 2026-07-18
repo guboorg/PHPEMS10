@@ -285,13 +285,20 @@ class exam_exam
 
 	public function resolveImportCsvFile($uploadfile)
 	{
-		$uploadfile = trim(urldecode(str_ireplace(array('http://','https://'),'',$uploadfile)));
+		$uploadfile = trim(urldecode($uploadfile));
 		if(!$uploadfile)return false;
-		if(preg_match('/^\/\//',$uploadfile))
+
+		$parts = parse_url($uploadfile);
+		if($parts && isset($parts['scheme']) && in_array(strtolower($parts['scheme']),array('http','https')))
 		{
-			$parts = explode('/',$uploadfile,4);
-			$uploadfile = isset($parts[3]) ? $parts[3] : '';
+			$uploadfile = isset($parts['path']) ? $parts['path'] : '';
 		}
+		elseif(preg_match('/^\/\//',$uploadfile))
+		{
+			$parts = parse_url('http:'.$uploadfile);
+			$uploadfile = ($parts && isset($parts['path'])) ? $parts['path'] : '';
+		}
+
 		$uploadfile = str_replace('\\','/',$uploadfile);
 		if(strpos($uploadfile,'?') !== false)$uploadfile = strstr($uploadfile,'?',true);
 		if(strpos($uploadfile,'#') !== false)$uploadfile = strstr($uploadfile,'#',true);
