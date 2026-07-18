@@ -51,8 +51,8 @@ class action extends app
 			}
 			else
 			$thumb = $fileurl;
-			if($osspath)
-			exit(json_encode(array('success' => true,'thumb' => $osspath,'title' => $upfile['name'])));
+			if($osspath && $this->ev->get('uploadtype') != 'files')
+			exit(json_encode(array('success' => true,'thumb' => $osspath,'local' => $thumb,'title' => $upfile['name'])));
 			else
 			exit(json_encode(array('success' => true,'thumb' => $thumb,'title' => $upfile['name'])));
 		}

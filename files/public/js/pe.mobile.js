@@ -1004,7 +1004,10 @@ function inituploader()
         'template': petemplate,
         'request': {
             'endpoint': 'index.php?document-api-fineuploader&imgwidth=375',
-            'method': 'POST'
+            'method': 'POST',
+            'params': {
+                'uploadtype': petype
+            }
         },
         'thumbnails': {
             'placeholders': {
