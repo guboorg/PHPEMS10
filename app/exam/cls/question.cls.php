@@ -393,9 +393,9 @@ class question_exam
 					{
 						$expqr = trim($expqr,',');
 						if($expqr)
-						$qrs = $this->getRandQuestionRowsList(array(array("AND","quest2knows.qkknowsid in (:knowsids)",array("AND","questionrows.qrtype = :qrtype",'qrtype',$key),array("AND","NOT find_in_set(questionrows.qrid,:expqr)",'expqr',$expqr),array("AND","questionrows.qrnumber <= :qrnumber",'qrnumber',$t))));
+						$qrs = $this->getRandQuestionRowsList(array(array("AND","quest2knows.qkknowsid in (:knowsids)",'knowsids',$knowsids),array("AND","questionrows.qrtype = :qrtype",'qrtype',$key),array("AND","NOT find_in_set(questionrows.qrid,:expqr)",'expqr',$expqr),array("AND","questionrows.qrnumber <= :qrnumber",'qrnumber',$t)));
 						else
-						$qrs = $this->getRandQuestionRowsList(array(array("AND","quest2knows.qkknowsid in (:knowsids)",array("AND","questionrows.qrtype = :qrtype",'qrtype',$key),array("AND","questionrows.qrnumber <= :qrnumber",'qrnumber',$t))));
+						$qrs = $this->getRandQuestionRowsList(array(array("AND","quest2knows.qkknowsid in (:knowsids)",'knowsids',$knowsids),array("AND","questionrows.qrtype = :qrtype",'qrtype',$key),array("AND","questionrows.qrnumber <= :qrnumber",'qrnumber',$t)));
 						if(count($qrs))
 						{
 							$qrid = $qrs[array_rand($qrs,1)];
