@@ -40,7 +40,7 @@ class action extends app
 
 			$args['attsize'] = $upfile['size'];
 			$args['attuserid'] = $this->_user['sessionuserid'];
-			$args['attcntype'] = $upfile['type'];
+			$args['attcntype'] = substr($upfile['type'],0,12);
 			$this->attach->addAttach($args);
 			if($this->ev->get('imgwidth') || $this->ev->get('imgheight'))
 			{

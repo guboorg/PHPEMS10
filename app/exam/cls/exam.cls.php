@@ -289,7 +289,15 @@ class exam_exam
         $this->_user = $this->session->getSessionUser();
         $userid = $this->_user['sessionuserid'];
         $username = $this->_user['sessionusername'];
+	    if(!$uploadfile || !is_file($uploadfile))
+	    {
+	    	return false;
+	    }
 	    $handle = fopen($uploadfile,"r");
+		if(!$handle)
+		{
+			return false;
+		}
 		$qrid = 0;
 		while ($data = fgetcsv($handle))
 		{
