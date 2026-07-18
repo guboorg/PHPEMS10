@@ -69,6 +69,25 @@ class action extends app
 		$this->tpl->display('question_filebatadd');
 	}
 
+	private function logDeepseekImportError($message,$context = array())
+	{
+		$line = '['.date('Y-m-d H:i:s').'] '.$message;
+		if($context)
+		{
+			$line .= ' '.json_encode($context,JSON_UNESCAPED_UNICODE);
+		}
+		$line .= "\n";
+		$logfile = PEPATH.'/data/deepseek_import_error.log';
+		@file_put_contents($logfile,$line,FILE_APPEND);
+		error_log('[DeepSeekImport] '.$message.($context?' '.json_encode($context,JSON_UNESCAPED_UNICODE):''));
+	}
+
+	private function deepseekImportFail($message,$context = array())
+	{
+		$this->logDeepseekImportError($message,$context);
+		\PHPEMS\ginkgo::R(array('statusCode' => 300,'message' => $message));
+	}
+
 	private function deepseekimport()
 	{
 		if($this->ev->get('importquestion'))
@@ -82,13 +101,12 @@ class action extends app
 			$questiontype = intval($this->ev->get('questiontype'));
 			$questionlevel = intval($this->ev->get('questionlevel'));
 			$maxTokens = intval($this->ev->get('max_tokens'));
-			if(!$model)$model = 'deepseek-v4-flash';
+			if(!$model)$model = 'deepseek-chat';
 			if($count <= 0)$count = 5;
 			if($maxTokens <= 0)$maxTokens = 4096;
 			if(!$apiKey || !$prompt)
 			{
-				$message = array('statusCode' => 300,"message" => "请填写 DeepSeek API Key 和生成要求");
-				\PHPEMS\ginkgo::R($message);
+				$this->deepseekImportFail('请填写 DeepSeek API Key 和生成要求');
 			}
 			$systemPrompt = '你是 PHPEMS 试题生成助手。请严格输出 json 对象，不要输出 Markdown。json 格式：{"questions":[{"type":1,"question":"题干","options":["A. 选项","B. 选项"],"select_number":4,"answer":"A","analysis":"答案解析","level":1,"knowsid":"1,2"}]}。type 为题型ID，level 为1到5整数，options 可为空数组。';
 			$userPrompt = "请根据以下要求生成 {$count} 道试题，必须包含题目选项、题目难易度、题型、答案和答案解析。默认题型ID：{$questiontype}，默认难度：{$questionlevel}，默认知识点ID：{$knowsid}。请返回 json。\n\n".$prompt;
@@ -102,6 +120,10 @@ class action extends app
 				'max_tokens' => $maxTokens,
 				'temperature' => 0.7
 			);
+			if(!function_exists('curl_init'))
+			{
+				$this->deepseekImportFail('DeepSeek 调用失败：服务器未启用 PHP curl 扩展，请先安装或启用 curl');
+			}
 			$ch = curl_init('https://api.deepseek.com/chat/completions');
 			curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
 			curl_setopt($ch,CURLOPT_POST,true);
@@ -110,37 +132,45 @@ class action extends app
 			curl_setopt($ch,CURLOPT_TIMEOUT,120);
 			$response = curl_exec($ch);
 			$error = curl_error($ch);
+			$errno = curl_errno($ch);
 			$httpCode = curl_getinfo($ch,CURLINFO_HTTP_CODE);
 			curl_close($ch);
 			if($error || $httpCode < 200 || $httpCode >= 300)
 			{
-				$message = array('statusCode' => 300,"message" => "DeepSeek 调用失败：".($error?$error:$response));
-				\PHPEMS\ginkgo::R($message);
+				$this->deepseekImportFail('DeepSeek 调用失败：'.($error?$error:$response),array('curl_errno' => $errno,'http_code' => $httpCode,'response' => $response));
 			}
 			$result = json_decode($response,true);
-			$content = $result['choices'][0]['message']['content'];
-			$data = json_decode($content,true);
-			if(!$data || !is_array($data['questions']))
+			if(!is_array($result))
 			{
-				$message = array('statusCode' => 300,"message" => "DeepSeek 未返回有效的试题 json");
-				\PHPEMS\ginkgo::R($message);
+				$this->deepseekImportFail('DeepSeek 返回内容不是有效 JSON，请查看 data/deepseek_import_error.log',array('response' => $response));
+			}
+			$content = isset($result['choices'][0]['message']['content'])?$result['choices'][0]['message']['content']:'';
+			if(!$content)
+			{
+				$this->deepseekImportFail('DeepSeek 返回内容中缺少 choices[0].message.content，请查看 data/deepseek_import_error.log',array('response' => $response));
+			}
+			$data = json_decode($content,true);
+			if(!$data || !isset($data['questions']) || !is_array($data['questions']))
+			{
+				$this->deepseekImportFail('DeepSeek 未返回有效的试题 json，请查看 data/deepseek_import_error.log',array('content' => $content));
 			}
 			$imported = 0;
 			foreach($data['questions'] as $question)
 			{
 				$args = array();
-				$args['questiontype'] = intval($question['type'])?intval($question['type']):$questiontype;
-				$args['question'] = $this->ev->addSlashes(htmlspecialchars(trim($question['question'])));
-				if(is_array($question['options']))$args['questionselect'] = $this->ev->addSlashes(htmlspecialchars(implode("\n",$question['options'])));
-				else $args['questionselect'] = $this->ev->addSlashes(htmlspecialchars(trim($question['options'])));
-				$args['questionselectnumber'] = intval($question['select_number'])?intval($question['select_number']):(is_array($question['options'])?count($question['options']):0);
-				$args['questionanswer'] = $this->ev->addSlashes(htmlspecialchars(trim($question['answer'])));
-				$args['questiondescribe'] = $this->ev->addSlashes(htmlspecialchars(trim($question['analysis'])));
-				$args['questionlevel'] = intval($question['level'])?intval($question['level']):$questionlevel;
+				$options = isset($question['options'])?$question['options']:array();
+				$args['questiontype'] = isset($question['type']) && intval($question['type'])?intval($question['type']):$questiontype;
+				$args['question'] = $this->ev->addSlashes(htmlspecialchars(trim(isset($question['question'])?$question['question']:'')));
+				if(is_array($options))$args['questionselect'] = $this->ev->addSlashes(htmlspecialchars(implode("\n",$options)));
+				else $args['questionselect'] = $this->ev->addSlashes(htmlspecialchars(trim($options)));
+				$args['questionselectnumber'] = isset($question['select_number']) && intval($question['select_number'])?intval($question['select_number']):(is_array($options)?count($options):0);
+				$args['questionanswer'] = $this->ev->addSlashes(htmlspecialchars(trim(isset($question['answer'])?$question['answer']:'')));
+				$args['questiondescribe'] = $this->ev->addSlashes(htmlspecialchars(trim(isset($question['analysis'])?$question['analysis']:'')));
+				$args['questionlevel'] = isset($question['level']) && intval($question['level'])?intval($question['level']):$questionlevel;
 				$args['questioncreatetime'] = TIME;
 				$args['questionuserid'] = $this->_user['sessionuserid'];
 				$args['questionusername'] = $this->_user['sessionusername'];
-				$qknowsid = trim($question['knowsid'])?trim($question['knowsid']):$knowsid;
+				$qknowsid = isset($question['knowsid']) && trim($question['knowsid'])?trim($question['knowsid']):$knowsid;
 				if($qknowsid)
 				{
 					$tmpkid = '0';
