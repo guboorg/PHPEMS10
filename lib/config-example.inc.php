@@ -19,8 +19,6 @@ else
 	define('WP','http://'.$_SERVER['SERVER_NAME'].'/');
 }
 define('OPENOSS',false);
-// 调试开关。生产环境请保持 false；排查问题时可在 lib/config.inc.php 中临时设为 true。
-define('DEBUG',false);
 
 /**composer开关**/
 define('COMPOSER',1);
