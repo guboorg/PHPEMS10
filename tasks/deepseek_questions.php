@@ -4,7 +4,7 @@
  *
  * 使用前只需修改下方“可配置变量”，然后执行：
  *   php tasks/deepseek_questions.php
- * 开启导入时，脚本会校验实际数据库的题型、知识点和表结构，去重后同时写入
+ * 脚本会校验实际数据库的题型、知识点和表结构，去重后同时写入
  * x2_questions 与 x2_quest2knows，因此在组卷的题库选题窗口中可查到。
  */
 
@@ -16,58 +16,52 @@ if (PHP_SAPI !== 'cli') {
 }
 
 // ============================ 可配置变量 ============================
-$DEEPSEEK_API_KEY = '';               // DeepSeek API Key，请勿提交真实密钥
+$DEEPSEEK_API_KEY = ''; // 必填，例如 sk-xxxx（不要提交真实密钥）
 $DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions';
 $DEEPSEEK_MODEL = 'deepseek-chat';
-$QUESTION_TOPIC = '从中国大陆小学单词中抽取词汇，给出新版DJ音标，题目形式为"根据音标写出单词"';
-$QUESTION_COUNT = 1;
-$QUESTION_TYPE = 4;                   // 1单选、2多选、3判断、4定值填空、5填空、6问答
-$QUESTION_LEVEL = 2;                  // 难度 1（容易）至 5（困难）
-$OPTION_LABELS = array();             // 选择题选项标签，如 array('A','B','C','D')；非选择题为空
-$ANSWER_REQUIREMENT = '根据给出的音标写出对应单词';
-$ANALYSIS_REQUIREMENT = '根据单词读音给出每个字母或者字母组合对应的音标，以及该单词发音所需注意的事项';
-$KNOWS_IDS = '1';                     // PHPEMS 知识点 ID，多个用英文逗号分隔
-$IMPORT_TO_DATABASE = true;           // false 只打印生成结果，不连接或写入数据库
-$IMPORT_USER_ID = 3;
-$IMPORT_USERNAME = 'Tianyi';
+$API_TIMEOUT = 120;
 $TEMPERATURE = 0.7;
-$MAX_TOKENS = 4096;
-$HTTP_TIMEOUT = 120;
 
-// 辅助测试变量。
-$SKIP_DUPLICATES = true;
-$MOCK_RESPONSE_FILE = '';             // 填写后从本地读取 DeepSeek content JSON，不请求 API
+$TOPIC = 'PHP 基础语法与 Web 安全';
+$LANGUAGE = '简体中文';
+$KNOWS_ID = 1;             // 必须是 x2_knows 中已启用的知识点
+$AUTHOR_USER_ID = 1;
+$AUTHOR_USERNAME = 'deepseek';
+$SKIP_DUPLICATES = true;   // 根据去标签后的题干与现有题库比较
+$MOCK_RESPONSE_FILE = '';  // 本地测试可填 DeepSeek content JSON 文件，填写后不请求 API
+
+// type 是 pe10.sql/x2_questype 的 ID；level: 1 易、2 中、3 难；options 是选项数。
+$QUESTION_PLAN = array(
+    array('type' => 1, 'type_name' => '单选题', 'level' => 1, 'options' => 4, 'count' => 2),
+    array('type' => 2, 'type_name' => '多选题', 'level' => 2, 'options' => 4, 'count' => 2),
+    array('type' => 3, 'type_name' => '判断题', 'level' => 2, 'options' => 2, 'count' => 1),
+    array('type' => 6, 'type_name' => '问答题', 'level' => 3, 'options' => 0, 'count' => 1),
+);
 // ====================================================================
 
+$root = dirname(__DIR__);
+$configFile = $root . '/lib/config.inc.php';
+if (!is_file($configFile)) {
+    fail('缺少 lib/config.inc.php，请先完成 PHPEMS 数据库配置');
+}
+require $configFile;
+
 try {
-    $knowsIds = parseKnowsIds($KNOWS_IDS);
-    validateSettings($QUESTION_COUNT, $QUESTION_TYPE, $QUESTION_LEVEL, $OPTION_LABELS);
-    $prompt = buildPrompt($QUESTION_TOPIC, $QUESTION_COUNT, $QUESTION_TYPE, $QUESTION_LEVEL,
-        $OPTION_LABELS, $ANSWER_REQUIREMENT, $ANALYSIS_REQUIREMENT);
-    $content = $MOCK_RESPONSE_FILE ? readMockResponse($MOCK_RESPONSE_FILE)
-        : requestDeepSeek($DEEPSEEK_API_URL, $DEEPSEEK_API_KEY, $DEEPSEEK_MODEL, $HTTP_TIMEOUT,
-            $TEMPERATURE, $MAX_TOKENS, $prompt);
-    $questions = decodeQuestions($content);
-    validateQuestions($questions, $QUESTION_COUNT, $QUESTION_TYPE, $QUESTION_LEVEL, $OPTION_LABELS);
-
-    echo json_encode(array('questions' => $questions), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . "\n";
-    if (!$IMPORT_TO_DATABASE) {
-        echo "IMPORT_TO_DATABASE=false，仅输出生成结果，未连接数据库。\n";
-        exit(0);
-    }
-
-    $configFile = dirname(__DIR__) . '/lib/config.inc.php';
-    if (!is_file($configFile)) throw new \RuntimeException('缺少 lib/config.inc.php，请先完成 PHPEMS 数据库配置');
-    require $configFile;
     $pdo = new \PDO('mysql:host=' . DH . ';dbname=' . DB . ';charset=utf8mb4', DU, DP, array(
         \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
         \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
         \PDO::ATTR_EMULATE_PREPARES => false,
     ));
 
-    $database = validateDatabase($pdo, DTH, $QUESTION_TYPE, $knowsIds);
-    echo "数据库校验通过，题型：{$database['type_name']}；知识点："
-        . implode('、', array_values($database['knows'])) . "\n";
+    $tables = validateDatabase($pdo, DTH, $QUESTION_PLAN, $KNOWS_ID);
+    echo "数据库校验通过，知识点：{$tables['knows']} (#{$KNOWS_ID})\n";
+
+    $content = $MOCK_RESPONSE_FILE
+        ? readMockResponse($MOCK_RESPONSE_FILE)
+        : requestDeepSeek($DEEPSEEK_API_URL, $DEEPSEEK_API_KEY, $DEEPSEEK_MODEL, $API_TIMEOUT, $TEMPERATURE,
+            buildPrompt($TOPIC, $LANGUAGE, $QUESTION_PLAN));
+    $questions = decodeQuestions($content);
+    validateQuestions($questions, $QUESTION_PLAN);
 
     $existing = loadExistingQuestions($pdo, DTH);
     $inserted = array();
@@ -80,42 +74,22 @@ try {
             $skipped++;
             continue;
         }
-        $id = insertQuestion($pdo, DTH, $question, $knowsIds, $database['knows'], $OPTION_LABELS,
-            $IMPORT_USER_ID, $IMPORT_USERNAME);
+        $id = insertQuestion($pdo, DTH, $question, $KNOWS_ID, $tables['knows'], $AUTHOR_USER_ID, $AUTHOR_USERNAME);
         $inserted[] = $id;
         $existing[$key] = $id;
         echo "已导入 #{$id}：" . plainText($question['question']) . "\n";
     }
-    verifyImportedQuestions($pdo, DTH, $inserted, $knowsIds);
+    verifyImportedQuestions($pdo, DTH, $inserted, $KNOWS_ID);
     $pdo->commit();
     echo "完成：导入 " . count($inserted) . " 题，跳过 {$skipped} 题。";
     if ($inserted) echo "题目 ID：" . implode(',', $inserted) . "。";
-    echo "\n组卷时选择知识点 #" . implode(',#', $knowsIds) . "，即可看到上述题目。\n";
+    echo "\n组卷时选择知识点 #{$KNOWS_ID}，即可在题库中看到上述题目。\n";
 } catch (\Throwable $e) {
     if (isset($pdo) && $pdo->inTransaction()) $pdo->rollBack();
     fail($e->getMessage());
 }
 
-function parseKnowsIds($value)
-{
-    $ids = array_values(array_unique(array_filter(array_map('trim', explode(',', $value)), 'strlen')));
-    if (!$ids) throw new \RuntimeException('$KNOWS_IDS 不能为空');
-    foreach ($ids as $id) if (!ctype_digit($id) || (int)$id < 1) throw new \RuntimeException("无效知识点 ID：{$id}");
-    return array_map('intval', $ids);
-}
-
-function validateSettings($count, $type, $level, array $labels)
-{
-    if ((int)$count < 1) throw new \RuntimeException('$QUESTION_COUNT 必须大于 0');
-    if ((int)$type < 1 || (int)$type > 6) throw new \RuntimeException('$QUESTION_TYPE 必须为 1 至 6');
-    if ((int)$level < 1 || (int)$level > 5) throw new \RuntimeException('$QUESTION_LEVEL 必须为 1 至 5');
-    if (in_array((int)$type, array(1, 2), true) && count($labels) < 2)
-        throw new \RuntimeException('单选题或多选题至少需要两个 $OPTION_LABELS');
-    if (!in_array((int)$type, array(1, 2), true) && $labels)
-        throw new \RuntimeException('非选择题的 $OPTION_LABELS 必须为空数组');
-}
-
-function validateDatabase(\PDO $pdo, $prefix, $questionType, array $knowsIds)
+function validateDatabase(\PDO $pdo, $prefix, array $plan, $knowsId)
 {
     foreach (array('questions', 'quest2knows', 'questype', 'knows') as $table) {
         $stmt = $pdo->query('SHOW TABLES LIKE ' . $pdo->quote($prefix . $table));
@@ -127,36 +101,38 @@ function validateDatabase(\PDO $pdo, $prefix, $questionType, array $knowsIds)
     $missing = array_diff($required, $columns);
     if ($missing) throw new \RuntimeException('questions 表缺少字段：' . implode(',', $missing));
 
-    $typeStmt = $pdo->prepare("SELECT questype FROM `{$prefix}questype` WHERE questid = ?");
-    $typeStmt->execute(array((int)$questionType));
-    $typeName = $typeStmt->fetchColumn();
-    if ($typeName === false) throw new \RuntimeException("数据库中不存在题型 #{$questionType}");
-    $stmt = $pdo->prepare("SELECT knows FROM `{$prefix}knows` WHERE knowsid = ? AND knowsstatus = 1");
-    $knows = array();
-    foreach ($knowsIds as $id) {
-        $stmt->execute(array($id));
-        $name = $stmt->fetchColumn();
-        if ($name === false) throw new \RuntimeException("知识点 #{$id} 不存在或未启用");
-        $knows[$id] = $name;
+    $typeStmt = $pdo->prepare("SELECT questid, questype FROM `{$prefix}questype` WHERE questid = ?");
+    foreach ($plan as $item) {
+        $typeStmt->execute(array((int)$item['type']));
+        $type = $typeStmt->fetch();
+        if (!$type) throw new \RuntimeException("题型 #{$item['type']} 不存在");
+        if ($type['questype'] !== $item['type_name']) {
+            throw new \RuntimeException("题型 #{$item['type']} 数据库名称为“{$type['questype']}”，与配置“{$item['type_name']}”不符");
+        }
     }
-    return array('type_name' => $typeName, 'knows' => $knows);
+    $stmt = $pdo->prepare("SELECT knows FROM `{$prefix}knows` WHERE knowsid = ? AND knowsstatus = 1");
+    $stmt->execute(array((int)$knowsId));
+    $knows = $stmt->fetchColumn();
+    if ($knows === false) throw new \RuntimeException("知识点 #{$knowsId} 不存在或未启用");
+    return array('knows' => $knows);
 }
 
-function buildPrompt($topic, $count, $type, $level, array $labels, $answerRequirement, $analysisRequirement)
+function buildPrompt($topic, $language, array $plan)
 {
-    return "你是严谨的考试出题专家。主题：{$topic}\n"
-        . "生成 {$count} 题；题型 ID={$type}；难度={$level}（不得改变）；选项标签："
-        . json_encode($labels, JSON_UNESCAPED_UNICODE) . "。\n答案要求：{$answerRequirement}\n解析要求：{$analysisRequirement}\n"
+    return "你是严谨的考试出题专家。请围绕“{$topic}”用{$language}出题。\n"
+        . "出题计划：" . json_encode($plan, JSON_UNESCAPED_UNICODE) . "\n"
         . '只返回 {"questions":[...]} JSON 对象，不要 Markdown。questions 每项必须为 '
-        . '{"type":题型ID,"level":难度,"question":"题干","options":["选项文字",...],'
-        . '"answer":"答案","analysis":"详细解析"}。非选择题 options 必须为 []；选择题选项数必须与标签数相同。';
+        . '{"type":题型ID,"level":1到3,"question":"题干","options":["A选项文字",...],'
+        . '"answer":"答案","analysis":"详细解析"}。选项内不带 A/B 前缀；单选答案如 A，多选如 ACD，'
+        . '判断题 options 必须是["正确","错误"]且答案用 A 或 B，问答题 options 是空数组且 answer 为参考答案。'
+        . '严格满足每组的数量、题型、难度和选项数，每题必须有非空解析。';
 }
 
-function requestDeepSeek($url, $apiKey, $model, $timeout, $temperature, $maxTokens, $prompt)
+function requestDeepSeek($url, $apiKey, $model, $timeout, $temperature, $prompt)
 {
     if ($apiKey === '') throw new \RuntimeException('请先在文件顶部填写 $DEEPSEEK_API_KEY');
     if (!function_exists('curl_init')) throw new \RuntimeException('PHP cURL 扩展未安装');
-    $payload = json_encode(array('model' => $model, 'temperature' => $temperature, 'max_tokens' => (int)$maxTokens,
+    $payload = json_encode(array('model' => $model, 'temperature' => $temperature,
         'response_format' => array('type' => 'json_object'),
         'messages' => array(array('role' => 'system', 'content' => '你只输出可解析的 JSON。'),
             array('role' => 'user', 'content' => $prompt))), JSON_UNESCAPED_UNICODE);
@@ -192,23 +168,30 @@ function decodeQuestions($content)
     return $decoded;
 }
 
-function validateQuestions(array $questions, $count, $type, $level, array $labels)
+function validateQuestions(array $questions, array $plan)
 {
-    if (count($questions) !== (int)$count)
-        throw new \RuntimeException("应生成 {$count} 题，实际返回 " . count($questions) . ' 题');
+    $expected = array();
+    foreach ($plan as $item) $expected[$item['type'] . ':' . $item['level']] = $item;
+    $actual = array();
     foreach ($questions as $index => $q) {
         foreach (array('type', 'level', 'question', 'options', 'answer', 'analysis') as $field) {
             if (!array_key_exists($field, $q)) throw new \RuntimeException("第 " . ($index + 1) . " 题缺少 {$field}");
         }
-        if ((int)$q['type'] !== (int)$type || (int)$q['level'] !== (int)$level)
-            throw new \RuntimeException("第 " . ($index + 1) . " 题的题型或难度与配置不符");
-        if (!is_array($q['options']) || count($q['options']) !== count($labels))
+        $key = (int)$q['type'] . ':' . (int)$q['level'];
+        if (!isset($expected[$key])) throw new \RuntimeException("第 " . ($index + 1) . " 题的题型/难度 {$key} 不在计划中");
+        if (!is_array($q['options']) || count($q['options']) !== (int)$expected[$key]['options'])
             throw new \RuntimeException("第 " . ($index + 1) . " 题选项数不符");
         if (trim($q['question']) === '' || trim($q['answer']) === '' || trim($q['analysis']) === '')
             throw new \RuntimeException("第 " . ($index + 1) . " 题的题干、答案或解析为空");
-        if (in_array((int)$type, array(1, 2), true)) {
-            normalizeSelectionAnswer($q['answer'], $labels, $index + 1);
+        if (in_array((int)$q['type'], array(1, 2, 3), true)) {
+            $answer = strtoupper(preg_replace('/[^A-Z]/i', '', $q['answer']));
+            $max = chr(64 + count($q['options']));
+            if ($answer === '' || preg_match('/[^A-' . $max . ']/', $answer)) throw new \RuntimeException("第 " . ($index + 1) . " 题答案超出选项范围");
         }
+        $actual[$key] = isset($actual[$key]) ? $actual[$key] + 1 : 1;
+    }
+    foreach ($expected as $key => $item) {
+        if (($actual[$key] ?? 0) !== (int)$item['count']) throw new \RuntimeException("题型/难度 {$key} 应有 {$item['count']} 题，实际 " . ($actual[$key] ?? 0) . ' 题');
     }
 }
 
@@ -220,15 +203,13 @@ function loadExistingQuestions(\PDO $pdo, $prefix)
     return $result;
 }
 
-function insertQuestion(\PDO $pdo, $prefix, array $q, array $knowsIds, array $knows, array $labels, $userId, $username)
+function insertQuestion(\PDO $pdo, $prefix, array $q, $knowsId, $knows, $userId, $username)
 {
     $optionsHtml = '';
-    foreach ($q['options'] as $i => $option) $optionsHtml .= '<p>' . $labels[$i] . ':' . plainText($option) . '</p>';
-    $answer = in_array((int)$q['type'], array(1, 2), true)
-        ? normalizeSelectionAnswer($q['answer'], $labels) : $q['answer'];
-    $knowsData = array();
-    foreach ($knowsIds as $id) $knowsData[] = array('knowsid' => (string)$id, 'knows' => $knows[$id]);
-    $knowsData = serialize($knowsData);
+    foreach ($q['options'] as $i => $option) $optionsHtml .= '<p>' . chr(65 + $i) . ':' . plainText($option) . '</p>';
+    $answer = in_array((int)$q['type'], array(1, 2, 3), true)
+        ? strtoupper(preg_replace('/[^A-Z]/i', '', $q['answer'])) : $q['answer'];
+    $knowsData = serialize(array(array('knowsid' => (string)$knowsId, 'knows' => $knows)));
     $sql = "INSERT INTO `{$prefix}questions` (questiontype,question,questionuserid,questionusername,questionlastmodifyuser,"
         . 'questionselect,questionselectnumber,questionanswer,questiondescribe,questionknowsid,questioncreatetime,'
         . 'questionstatus,questionhtml,questionparent,questionsequence,questionlevel,questiondeler,questiondeltime) '
@@ -236,37 +217,24 @@ function insertQuestion(\PDO $pdo, $prefix, array $q, array $knowsIds, array $kn
     $pdo->prepare($sql)->execute(array((int)$q['type'], html($q['question']), (int)$userId, $username, '', html($optionsHtml),
         count($q['options']), html($answer), html($q['analysis']), $knowsData, time(), 1, '', 0, 0, (int)$q['level'], '', 0));
     $id = (int)$pdo->lastInsertId();
-    $relation = $pdo->prepare("INSERT INTO `{$prefix}quest2knows` (qkquestionid,qkknowsid,qktype) VALUES (?,?,0)");
-    foreach ($knowsIds as $knowsId) $relation->execute(array($id, $knowsId));
+    $pdo->prepare("INSERT INTO `{$prefix}quest2knows` (qkquestionid,qkknowsid,qktype) VALUES (?,?,0)")
+        ->execute(array($id, (int)$knowsId));
     return $id;
 }
 
-function verifyImportedQuestions(\PDO $pdo, $prefix, array $ids, array $knowsIds)
+function verifyImportedQuestions(\PDO $pdo, $prefix, array $ids, $knowsId)
 {
     if (!$ids) return;
     $marks = implode(',', array_fill(0, count($ids), '?'));
-    $knowledgeMarks = implode(',', array_fill(0, count($knowsIds), '?'));
-    $params = array_merge($ids, $knowsIds);
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM `{$prefix}questions` q "
+    $params = array_merge($ids, array((int)$knowsId));
+    $stmt = $pdo->prepare("SELECT COUNT(DISTINCT q.questionid) FROM `{$prefix}questions` q "
         . "JOIN `{$prefix}quest2knows` k ON k.qkquestionid=q.questionid AND k.qktype=0 "
-        . "WHERE q.questionstatus=1 AND q.questionid IN ({$marks}) AND k.qkknowsid IN ({$knowledgeMarks})");
+        . "WHERE q.questionstatus=1 AND q.questionid IN ({$marks}) AND k.qkknowsid=?");
     $stmt->execute($params);
-    if ((int)$stmt->fetchColumn() !== count($ids) * count($knowsIds))
-        throw new \RuntimeException('导入后可见性校验失败，事务已回滚');
+    if ((int)$stmt->fetchColumn() !== count($ids)) throw new \RuntimeException('导入后可见性校验失败，事务已回滚');
 }
 
 function html($value) { return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
-function normalizeSelectionAnswer($value, array $labels, $questionNumber = 0)
-{
-    $answer = preg_replace('/[,\s]+/u', '', trim($value));
-    $remaining = $answer;
-    foreach ($labels as $label) $remaining = str_replace($label, '', $remaining);
-    if ($answer === '' || $remaining !== '') {
-        $prefix = $questionNumber ? "第 {$questionNumber} 题" : '';
-        throw new \RuntimeException($prefix . '答案不在 $OPTION_LABELS 中');
-    }
-    return $answer;
-}
 function plainText($value) { return trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags($value), ENT_QUOTES, 'UTF-8'))); }
 function normalizeQuestion($value) { return mb_strtolower(preg_replace('/[\s\p{P}\p{S}]+/u', '', plainText($value)), 'UTF-8'); }
 function fail($message) { fwrite(STDERR, "错误：{$message}\n"); exit(1); }
