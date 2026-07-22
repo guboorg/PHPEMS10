@@ -21,7 +21,7 @@ $DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions';
 $DEEPSEEK_MODEL = 'deepseek-chat';
 $QUESTION_TOPIC = '从中国大陆小学单词中抽取词汇，给出新版DJ音标，题目形式为"根据音标写出单词"';
 $QUESTION_COUNT = 1;
-$QUESTION_TYPE = 4;                   // 1单选、2多选、3判断、4定值填空、5填空、6问答
+$QUESTION_TYPE = 5;                   // 1单选、2多选、3判断、4定值填空、5填空、6问答；手工组卷默认启用填空题(5)
 $QUESTION_LEVEL = 2;                  // 难度 1（容易）至 5（困难）
 $OPTION_LABELS = array();             // 选择题选项标签，如 array('A','B','C','D')；非选择题为空
 $ANSWER_REQUIREMENT = '根据给出的音标写出对应单词';
@@ -86,7 +86,7 @@ try {
         $existing[$key] = $id;
         echo "已导入 #{$id}：" . plainText($question['question']) . "\n";
     }
-    verifyImportedQuestions($pdo, DTH, $inserted, $knowsIds);
+    verifyImportedQuestions($pdo, DTH, $inserted, $knowsIds, $QUESTION_TYPE, $QUESTION_LEVEL);
     $pdo->commit();
     echo "完成：导入 " . count($inserted) . " 题，跳过 {$skipped} 题。";
     if ($inserted) echo "题目 ID：" . implode(',', $inserted) . "。";
@@ -241,15 +241,16 @@ function insertQuestion(\PDO $pdo, $prefix, array $q, array $knowsIds, array $kn
     return $id;
 }
 
-function verifyImportedQuestions(\PDO $pdo, $prefix, array $ids, array $knowsIds)
+function verifyImportedQuestions(\PDO $pdo, $prefix, array $ids, array $knowsIds, $questionType, $questionLevel)
 {
     if (!$ids) return;
     $marks = implode(',', array_fill(0, count($ids), '?'));
     $knowledgeMarks = implode(',', array_fill(0, count($knowsIds), '?'));
-    $params = array_merge($ids, $knowsIds);
+    $params = array_merge($ids, $knowsIds, array((int)$questionType, (int)$questionLevel));
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM `{$prefix}questions` q "
         . "JOIN `{$prefix}quest2knows` k ON k.qkquestionid=q.questionid AND k.qktype=0 "
-        . "WHERE q.questionstatus=1 AND q.questionid IN ({$marks}) AND k.qkknowsid IN ({$knowledgeMarks})");
+        . "WHERE q.questionstatus=1 AND q.questionparent=0 AND q.questionid IN ({$marks}) "
+        . "AND k.qkknowsid IN ({$knowledgeMarks}) AND q.questiontype=? AND q.questionlevel=?");
     $stmt->execute($params);
     if ((int)$stmt->fetchColumn() !== count($ids) * count($knowsIds))
         throw new \RuntimeException('导入后可见性校验失败，事务已回滚');
